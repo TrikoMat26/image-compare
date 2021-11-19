@@ -64,12 +64,14 @@
       * {
         box-sizing: border-box;
       }
-      html,
+      html {
+        height: -webkit-fill-available;
+      }
       body {
         width: 100%;
         height: 100%;
-        min-width: 100%;
-        min-height: 100%;
+        min-height: 100vh;
+        min-height: -webkit-fill-available;
         overflow: hidden;
       }
       .mdc-tab {
@@ -84,7 +86,7 @@
         grid-template-rows: 100% 100%;
         grid-template-areas:
           "main compare"
-          "main .";
+          "samples .";
       }
       .fc {
         display: flex;
@@ -139,19 +141,18 @@
       }
 
       .ty-100 {
-        transform: translate3d(0, -100vh, 0);
+        transform: translate3d(0, -100%, 0);
       }
 
       #main {
         grid-area: main;
         display: grid;
-        grid-template-rows: auto 1fr 10vh 100vh;
+        grid-template-rows: auto 1fr 10vh;
         grid-template-columns: 100vw;
         grid-template-areas:
           "logo"
           "buttons"
-          "footer"
-          "samples";
+          "footer";
         justify-items: center;
         align-items: center;
       }
@@ -336,114 +337,114 @@
           ></span
         >
       </footer>
-      <div class="samples w-100 h-100">
-        <header class="mdc-top-app-bar mdc-top-app-bar--fixed">
-          <div class="mdc-top-app-bar__row">
-            <section
+    </div>
+    <div class="samples w-100 h-100">
+      <header class="mdc-top-app-bar mdc-top-app-bar--fixed">
+        <div class="mdc-top-app-bar__row">
+          <section
+            class="
+              mdc-top-app-bar__section mdc-top-app-bar__section--align-start
+            "
+          >
+            <button
+              id="samples_close_btn"
               class="
-                mdc-top-app-bar__section mdc-top-app-bar__section--align-start
+                material-icons
+                mdc-top-app-bar__navigation-icon
+                mdc-icon-button
               "
+              aria-label="Close"
             >
-              <button
-                id="samples_close_btn"
-                class="
-                  material-icons
-                  mdc-top-app-bar__navigation-icon
-                  mdc-icon-button
-                "
-                aria-label="Close"
-              >
-                close
-              </button>
-              <span class="mdc-top-app-bar__title">Samples</span>
-            </section>
-          </div>
-        </header>
-
-        <div class="mdc-top-app-bar--fixed-adjust">
-          <ul class="mdc-list mdc-list--thumbnail-list">
-            <li class="mdc-list-item f-center" tabindex="0">
-              <span
-                class="mdc-list-item__ripple"
-                data-mdc-auto-init="MDCRipple"
-              ></span>
-              <img
-                class="mdc-list-item__graphic"
-                src="images/usecases/book/case2-traherne1.jpg"
-              />
-              <img
-                class="mdc-list-item__graphic"
-                src="images/usecases/book/case2-traherne2.jpg"
-              />
-              <span class="mdc-list-item__text">Book editions</span>
-            </li>
-            <li role="separator" class="mdc-list-divider"></li>
-            <li class="mdc-list-item f-center" tabindex="-1">
-              <span
-                class="mdc-list-item__ripple"
-                data-mdc-auto-init="MDCRipple"
-              ></span>
-              <img
-                class="mdc-list-item__graphic"
-                src="images/usecases/churchill/case3-churchill-1.jpg"
-              />
-              <img
-                class="mdc-list-item__graphic"
-                src="images/usecases/churchill/case3-churchill-2.jpg"
-              />
-              <span class="mdc-list-item__text">Photo Forgery</span>
-            </li>
-            <li role="separator" class="mdc-list-divider"></li>
-            <li class="mdc-list-item f-center" tabindex="-1">
-              <span
-                class="mdc-list-item__ripple"
-                data-mdc-auto-init="MDCRipple"
-              ></span>
-              <img
-                class="mdc-list-item__graphic"
-                src="images/usecases/Ghent/case1-Ghent-before.jpg"
-              />
-              <img
-                class="mdc-list-item__graphic"
-                src="images/usecases/Ghent/case1-Ghent-after.jpg"
-              />
-              <span class="mdc-list-item__text">Art restoration</span>
-            </li>
-            <li role="separator" class="mdc-list-divider"></li>
-            <li class="mdc-list-item f-center" tabindex="-1">
-              <span
-                class="mdc-list-item__ripple"
-                data-mdc-auto-init="MDCRipple"
-              ></span>
-              <img
-                class="mdc-list-item__graphic"
-                src="images/usecases/music/case5-music-sheet-1.jpg"
-              />
-              <img
-                class="mdc-list-item__graphic"
-                src="images/usecases/music/case5-music-sheet-2.jpg"
-              />
-              <span class="mdc-list-item__text">Music sheet editions</span>
-            </li>
-            <li role="separator" class="mdc-list-divider"></li>
-            <li class="mdc-list-item f-center" tabindex="-1">
-              <span
-                class="mdc-list-item__ripple"
-                data-mdc-auto-init="MDCRipple"
-              ></span>
-              <img
-                class="mdc-list-item__graphic"
-                src="images/usecases/satellite/Original-Tokyo-2017.jpg"
-              />
-              <img
-                class="mdc-list-item__graphic"
-                src="images/usecases/satellite/Original-Tokyo-1986.jpg"
-              />
-              <span class="mdc-list-item__text">Satellite imagery</span>
-            </li>
-            <li role="separator" class="mdc-list-divider"></li>
-          </ul>
+              close
+            </button>
+            <span class="mdc-top-app-bar__title">Samples</span>
+          </section>
         </div>
+      </header>
+
+      <div class="mdc-top-app-bar--fixed-adjust">
+        <ul class="mdc-list mdc-list--thumbnail-list">
+          <li class="mdc-list-item f-center" tabindex="0">
+            <span
+              class="mdc-list-item__ripple"
+              data-mdc-auto-init="MDCRipple"
+            ></span>
+            <img
+              class="mdc-list-item__graphic"
+              src="images/usecases/book/case2-traherne1.jpg"
+            />
+            <img
+              class="mdc-list-item__graphic"
+              src="images/usecases/book/case2-traherne2.jpg"
+            />
+            <span class="mdc-list-item__text">Book editions</span>
+          </li>
+          <li role="separator" class="mdc-list-divider"></li>
+          <li class="mdc-list-item f-center" tabindex="-1">
+            <span
+              class="mdc-list-item__ripple"
+              data-mdc-auto-init="MDCRipple"
+            ></span>
+            <img
+              class="mdc-list-item__graphic"
+              src="images/usecases/churchill/case3-churchill-1.jpg"
+            />
+            <img
+              class="mdc-list-item__graphic"
+              src="images/usecases/churchill/case3-churchill-2.jpg"
+            />
+            <span class="mdc-list-item__text">Photo Forgery</span>
+          </li>
+          <li role="separator" class="mdc-list-divider"></li>
+          <li class="mdc-list-item f-center" tabindex="-1">
+            <span
+              class="mdc-list-item__ripple"
+              data-mdc-auto-init="MDCRipple"
+            ></span>
+            <img
+              class="mdc-list-item__graphic"
+              src="images/usecases/Ghent/case1-Ghent-before.jpg"
+            />
+            <img
+              class="mdc-list-item__graphic"
+              src="images/usecases/Ghent/case1-Ghent-after.jpg"
+            />
+            <span class="mdc-list-item__text">Art restoration</span>
+          </li>
+          <li role="separator" class="mdc-list-divider"></li>
+          <li class="mdc-list-item f-center" tabindex="-1">
+            <span
+              class="mdc-list-item__ripple"
+              data-mdc-auto-init="MDCRipple"
+            ></span>
+            <img
+              class="mdc-list-item__graphic"
+              src="images/usecases/music/case5-music-sheet-1.jpg"
+            />
+            <img
+              class="mdc-list-item__graphic"
+              src="images/usecases/music/case5-music-sheet-2.jpg"
+            />
+            <span class="mdc-list-item__text">Music sheet editions</span>
+          </li>
+          <li role="separator" class="mdc-list-divider"></li>
+          <li class="mdc-list-item f-center" tabindex="-1">
+            <span
+              class="mdc-list-item__ripple"
+              data-mdc-auto-init="MDCRipple"
+            ></span>
+            <img
+              class="mdc-list-item__graphic"
+              src="images/usecases/satellite/Original-Tokyo-2017.jpg"
+            />
+            <img
+              class="mdc-list-item__graphic"
+              src="images/usecases/satellite/Original-Tokyo-1986.jpg"
+            />
+            <span class="mdc-list-item__text">Satellite imagery</span>
+          </li>
+          <li role="separator" class="mdc-list-divider"></li>
+        </ul>
       </div>
     </div>
     <div id="compare_screen" class="">
@@ -678,7 +679,7 @@
       const snack_el = document.getElementById("snack");
       const main_el = document.getElementById("main");
       const compare_el = document.getElementById("compare_screen");
-      const samples_el = document.querySelector("#main > div.samples");
+      const samples_el = document.querySelector("div.samples");
       const result_el = document.querySelector("#result");
 
       let main, result, compare, samples;
