@@ -5,6 +5,7 @@ pages:
   script:
   - echo 'Publishing website'
   - mkdir -p public/
+  - mkdir -p public/app/latest/
   - cp -rv app/ public/app/latest/
   - cp -rv website/publish/ public
   artifacts:
