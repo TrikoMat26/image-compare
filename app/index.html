@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="manifest" href="./manifest.json" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-title" content="Image Comparator" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>VGG Image compare</title>
+    <link rel="apple-touch-icon" href="./images/icons/imcomp-192x192.png" />
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link rel="preconnect" href="https://unpkg.com/" crossorigin />
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
+      as="style"
+      type="text/css"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css?family=Material+Icons&display=block"
+      as="style"
+      type="text/css"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href="https://fonts.gstatic.com/s/materialicons/v115/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css"
+      as="style"
+      type="text/css"
+      crossorigin="anonymous"
+    />
+
+    <!-- Required styles for Material Web -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css"
+      crossorigin="anonymous"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Material+Icons&display=block"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        min-width: 100%;
+        min-height: 100%;
+        overflow: hidden;
+      }
+      .mdc-tab {
+        --mdc-typography-caption-text-transform: none;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        position: relative;
+        display: grid;
+        grid-template-columns: 100% 100%;
+        grid-template-rows: 100% 100%;
+        grid-template-areas:
+          "main compare"
+          "main .";
+      }
+      .fc {
+        display: flex;
+        flex-flow: column nowrap;
+      }
+      .fr {
+        display: flex;
+        flex-flow: row nowrap;
+      }
+
+      .f-center {
+        align-items: center;
+      }
+
+      .f-justify-center {
+        justify-content: center;
+      }
+
+      .f-spaced > * {
+        flex: 0 0 auto;
+        margin: 0.5em auto;
+      }
+
+      .f-stretch > * {
+        flex: 1 1 50%;
+        min-height: 0;
+        margin: 0.5em auto;
+      }
+
+      .h-100 {
+        height: 100%;
+      }
+
+      .w-100 {
+        width: 100%;
+      }
+
+      .mw-100 {
+        max-width: 100%;
+      }
+
+      .mh-100 {
+        max-height: 100%;
+      }
+
+      .hide {
+        visibility: hidden;
+      }
+
+      .gone {
+        display: none;
+      }
+
+      .ty-100 {
+        transform: translate3d(0, -100vh, 0);
+      }
+
+      #main {
+        grid-area: main;
+        display: grid;
+        grid-template-rows: auto 1fr 10vh 100vh;
+        grid-template-columns: 100vw;
+        grid-template-areas:
+          "logo"
+          "buttons"
+          "footer"
+          "samples";
+        justify-items: center;
+        align-items: center;
+      }
+
+      .samples {
+        grid-area: samples;
+        background-color: rgba(255, 255, 255, 1);
+        transition: transform 0.24s 0.16s;
+        z-index: 1;
+      }
+      .samples > div.mdc-top-app-bar--fixed-adjust {
+        height: 100%;
+        overflow-y: auto;
+      }
+
+      #main > section.logo {
+        grid-area: logo;
+        margin: 2em auto;
+        padding: 1em;
+      }
+      #main > section.logo > img {
+        height: 100%;
+        max-width: min(100%, 512px);
+        max-height: min(max(20vh, 64px), 256px);
+      }
+      #main > section.buttons {
+        grid-area: buttons;
+      }
+      #main > footer {
+        grid-area: footer;
+      }
+
+      #compare_screen {
+        grid-area: compare;
+        display: grid;
+        grid-template-rows: 1fr auto;
+        grid-template-columns: 100vw 100vw;
+        grid-template-areas:
+          "compare_container compare_container"
+          "compare_footer .";
+        overflow: hidden;
+      }
+      #compare_screen > footer {
+        grid-area: compare_footer;
+        position: sticky;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+
+      #compare_container {
+        grid-area: compare_container;
+        display: grid;
+        min-height: 0;
+        max-height: 100%;
+        grid-template-rows: 20vh 1fr auto;
+        grid-template-columns: 100vw 100vw;
+      }
+      #compare_container > .vertical-image-list {
+        grid-area: 1 / 1 / 3 / 2;
+        padding: 1em;
+        margin: 0;
+      }
+      #compare_container > .horizontal-image-list > li {
+        border: 1px solid #ccc;
+        margin: 0 0.5em;
+      }
+
+      #compare_container > .horizontal-image-list {
+        grid-area: 1 / 2 / 2 / 3;
+        padding: 1em;
+        margin: 0;
+      }
+      #compare_container > .vertical-image-list > li {
+        border: 1px solid #ccc;
+        border-radius: 1em;
+        position: relative;
+      }
+
+      #compare_container > div.action {
+        grid-area: 3 / 2 / 4 / 3;
+        margin: auto auto 1.5em auto;
+      }
+      #compare {
+        grid-area: 3 / 1 / 4 / 2;
+        margin: auto auto 1.5em auto;
+      }
+
+      #result {
+        grid-area: 2 / 2 / 3 / 3;
+        padding: 0 0.25em 0.5em 0.25em;
+        place-self: center center;
+        min-height: 0;
+      }
+
+      #compare_container > div.action > .mdc-tab-bar .mdc-tab {
+        height: 36px;
+      }
+
+      img.mdc-image-list__image {
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+        width: auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 0.25em;
+      }
+      img.mdc-list-item__graphic {
+        height: min(max(32px, 20vmin), 128px);
+        width: min(max(32px, 20vmin), 128px);
+        object-fit: cover;
+        padding: 4px;
+        border: 1px solid #ddd;
+        margin: 16px 4px;
+        border-radius: 20%;
+        flex: 0 0 20vmin;
+      }
+      .mdc-list-item__text {
+        flex: 1 0 50%;
+        margin-left: 1em;
+      }
+    </style>
+
+    <title>Document</title>
+  </head>
+  <body class="mdc-typography">
+    <aside id="snack" class="mdc-snackbar" data-mdc-auto-init="MDCSnackbar">
+      <div
+        class="mdc-snackbar__surface"
+        role="status"
+        aria-relevant="additions"
+      >
+        <div class="mdc-snackbar__label" aria-atomic="false">
+          Please select 2 images to proceed.
+        </div>
+      </div>
+    </aside>
+    <div id="main" class="h-100">
+      <section class="logo w-100 fc f-center f-justify-center">
+        <img
+          src="images/logo/imcomp-logo-large-path.svg"
+          alt="logo goes here"
+        />
+      </section>
+      <input
+        type="file"
+        id="image_select_input"
+        multiple
+        accept=".jpg, .jpeg, .png"
+        class="gone"
+      />
+      <section class="buttons fc f-spaced f-center f-justify-center">
+        <button id="image_select_btn" class="mdc-button mdc-button--raised">
+          <span
+            class="mdc-button__ripple"
+            data-mdc-auto-init="MDCRipple"
+          ></span>
+          <span class="mdc-button__touch"></span>
+          <span class="mdc-button__label">Select 2 Images</span>
+        </button>
+        <span>OR</span>
+        <button id="try_samples_btn" class="mdc-button mdc-button--outlined">
+          <span
+            class="mdc-button__ripple"
+            data-mdc-auto-init="MDCRipple"
+          ></span>
+          <span class="mdc-button__touch"></span>
+          <span class="mdc-button__label">Try Samples</span>
+        </button>
+      </section>
+      <footer>
+        <span
+          >Developed by
+          <a
+            href="https://robots.ox.ac.uk/~vgg/"
+            rel="noopener noreferrer"
+            target="_blank"
+            >VGG, Oxford</a
+          ></span
+        >
+      </footer>
+      <div class="samples w-100 h-100">
+        <header class="mdc-top-app-bar mdc-top-app-bar--fixed">
+          <div class="mdc-top-app-bar__row">
+            <section
+              class="
+                mdc-top-app-bar__section mdc-top-app-bar__section--align-start
+              "
+            >
+              <button
+                id="samples_close_btn"
+                class="
+                  material-icons
+                  mdc-top-app-bar__navigation-icon
+                  mdc-icon-button
+                "
+                aria-label="Close"
+              >
+                close
+              </button>
+              <span class="mdc-top-app-bar__title">Samples</span>
+            </section>
+          </div>
+        </header>
+
+        <div class="mdc-top-app-bar--fixed-adjust">
+          <ul class="mdc-list mdc-list--thumbnail-list">
+            <li class="mdc-list-item f-center" tabindex="0">
+              <span
+                class="mdc-list-item__ripple"
+                data-mdc-auto-init="MDCRipple"
+              ></span>
+              <img
+                class="mdc-list-item__graphic"
+                src="images/usecases/book/case2-traherne1.jpg"
+              />
+              <img
+                class="mdc-list-item__graphic"
+                src="images/usecases/book/case2-traherne2.jpg"
+              />
+              <span class="mdc-list-item__text">Book editions</span>
+            </li>
+            <li role="separator" class="mdc-list-divider"></li>
+            <li class="mdc-list-item f-center" tabindex="-1">
+              <span
+                class="mdc-list-item__ripple"
+                data-mdc-auto-init="MDCRipple"
+              ></span>
+              <img
+                class="mdc-list-item__graphic"
+                src="images/usecases/churchill/case3-churchill-1.jpg"
+              />
+              <img
+                class="mdc-list-item__graphic"
+                src="images/usecases/churchill/case3-churchill-2.jpg"
+              />
+              <span class="mdc-list-item__text">Photo Forgery</span>
+            </li>
+            <li role="separator" class="mdc-list-divider"></li>
+            <li class="mdc-list-item f-center" tabindex="-1">
+              <span
+                class="mdc-list-item__ripple"
+                data-mdc-auto-init="MDCRipple"
+              ></span>
+              <img
+                class="mdc-list-item__graphic"
+                src="images/usecases/Ghent/case1-Ghent-before.jpg"
+              />
+              <img
+                class="mdc-list-item__graphic"
+                src="images/usecases/Ghent/case1-Ghent-after.jpg"
+              />
+              <span class="mdc-list-item__text">Art restoration</span>
+            </li>
+            <li role="separator" class="mdc-list-divider"></li>
+            <li class="mdc-list-item f-center" tabindex="-1">
+              <span
+                class="mdc-list-item__ripple"
+                data-mdc-auto-init="MDCRipple"
+              ></span>
+              <img
+                class="mdc-list-item__graphic"
+                src="images/usecases/music/case5-music-sheet-1.jpg"
+              />
+              <img
+                class="mdc-list-item__graphic"
+                src="images/usecases/music/case5-music-sheet-2.jpg"
+              />
+              <span class="mdc-list-item__text">Music sheet editions</span>
+            </li>
+            <li role="separator" class="mdc-list-divider"></li>
+            <li class="mdc-list-item f-center" tabindex="-1">
+              <span
+                class="mdc-list-item__ripple"
+                data-mdc-auto-init="MDCRipple"
+              ></span>
+              <img
+                class="mdc-list-item__graphic"
+                src="images/usecases/satellite/Original-Tokyo-2017.jpg"
+              />
+              <img
+                class="mdc-list-item__graphic"
+                src="images/usecases/satellite/Original-Tokyo-1986.jpg"
+              />
+              <span class="mdc-list-item__text">Satellite imagery</span>
+            </li>
+            <li role="separator" class="mdc-list-divider"></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div id="compare_screen" class="">
+      <div id="compare_container" class="">
+        <input
+          type="file"
+          id="image_select_input2"
+          accept=".jpg, .jpeg, .png"
+          class="gone"
+        />
+        <ul
+          class="mdc-image-list vertical-image-list fc f-center f-stretch w-100"
+        >
+          <li
+            class="mdc-image-list__item w-100 mdc-elevation--z4"
+            data-index="0"
+          >
+            <img
+              class="mdc-image-list__image"
+              src="images/logo/imcomp-logo-large.png"
+            />
+          </li>
+          <li
+            class="mdc-image-list__item w-100 mdc-elevation--z4"
+            data-index="1"
+          >
+            <img
+              class="mdc-image-list__image"
+              src="images/logo/imcomp-logo-large.png"
+            />
+          </li>
+        </ul>
+
+        <ul
+          class="
+            mdc-image-list
+            horizontal-image-list
+            fr
+            f-justify-center f-stretch
+          "
+        >
+          <li class="mdc-image-list__item fc f-center f-justify-center mw-100">
+            <img
+              class="mdc-image-list__image"
+              src="images/logo/imcomp-logo-large.png"
+            />
+          </li>
+          <li class="mdc-image-list__item fc f-center f-justify-center mw-100">
+            <img
+              class="mdc-image-list__image"
+              src="images/logo/imcomp-logo-large.png"
+            />
+          </li>
+        </ul>
+
+        <canvas id="result" class="mw-100 mh-100"> </canvas>
+
+        <div class="action">
+          <div id="toggle" class="mdc-tab-bar mdc-elevation--z4">
+            <div class="mdc-tab-scroller">
+              <div class="mdc-tab-scroller__scroll-area">
+                <div class="mdc-tab-scroller__scroll-content">
+                  <button class="mdc-tab" data-speed="1">
+                    <span class="mdc-tab__content">
+                      <span class="mdc-tab__text-label mdc-theme--primary"
+                        >SLOW</span
+                      >
+                    </span>
+                  </button>
+                  <button
+                    class="mdc-tab mdc-theme--primary-bg active"
+                    data-speed="2"
+                  >
+                    <span class="mdc-tab__content">
+                      <span class="mdc-tab__text-label mdc-theme--on-primary"
+                        >Normal</span
+                      >
+                    </span>
+                  </button>
+                  <button class="mdc-tab" data-speed="4">
+                    <span class="mdc-tab__content">
+                      <span class="mdc-tab__text-label mdc-theme--primary"
+                        >FAST</span
+                      >
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button id="compare" class="mdc-button mdc-button--raised">
+          <span
+            class="mdc-button__ripple"
+            data-mdc-auto-init="MDCRipple"
+          ></span>
+          <span class="mdc-button__touch"></span>
+          <span class="mdc-button__label">Compare</span>
+        </button>
+      </div>
+      <footer class="w-100">
+        <div
+          role="progressbar"
+          class="
+            mdc-linear-progress
+            mdc-linear-progress--indeterminate
+            mdc-linear-progress--closed
+          "
+          aria-label="Example Progress Bar"
+          aria-valuemin="0"
+          aria-valuemax="1"
+          aria-valuenow="0"
+          data-mdc-auto-init="MDCLinearProgress"
+        >
+          <div class="mdc-linear-progress__buffer">
+            <div class="mdc-linear-progress__buffer-bar"></div>
+            <div class="mdc-linear-progress__buffer-dots"></div>
+          </div>
+          <div
+            class="mdc-linear-progress__bar mdc-linear-progress__primary-bar"
+          >
+            <span class="mdc-linear-progress__bar-inner"></span>
+          </div>
+          <div
+            class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar"
+          >
+            <span class="mdc-linear-progress__bar-inner"></span>
+          </div>
+        </div>
+        <div class="mdc-tab-bar mdc-theme--primary-bg">
+          <div class="mdc-tab-scroller">
+            <div class="mdc-tab-scroller__scroll-area">
+              <div class="mdc-tab-scroller__scroll-content">
+                <button id="back" class="mdc-tab mdc-tab--stacked">
+                  <span class="mdc-tab__content">
+                    <span
+                      class="
+                        mdc-tab__icon
+                        material-icons
+                        mdc-typography--caption
+                        mdc-theme--on-primary
+                      "
+                      aria-hidden="true"
+                      >arrow_back_ios_new</span
+                    >
+                    <span
+                      class="
+                        mdc-tab__text-label
+                        mdc-theme--on-primary
+                        mdc-typography--caption
+                      "
+                      >Back</span
+                    >
+                  </span>
+                </button>
+                <button class="mdc-tab mdc-tab--stacked">
+                  <span class="mdc-tab__content">
+                    <span
+                      class="
+                        mdc-tab__icon
+                        material-icons
+                        mdc-typography--caption
+                        mdc-theme--on-primary
+                      "
+                      aria-hidden="true"
+                    ></span>
+                    <span
+                      class="
+                        mdc-tab__text-label
+                        mdc-theme--on-primary
+                        mdc-typography--caption
+                      "
+                    ></span>
+                  </span>
+                </button>
+                <button id="more" class="mdc-tab mdc-tab--stacked">
+                  <span class="mdc-tab__content">
+                    <span
+                      class="
+                        mdc-tab__icon
+                        material-icons
+                        mdc-typography--caption
+                        mdc-theme--on-primary
+                      "
+                      aria-hidden="true"
+                    ></span>
+                    <span
+                      class="
+                        mdc-tab__text-label
+                        mdc-theme--on-primary
+                        mdc-typography--caption
+                      "
+                    ></span>
+                  </span>
+                  <!-- <span class="mdc-tab__content">
+                    <span
+                      class="
+                        mdc-tab__icon
+                        material-icons
+                        mdc-typography--caption
+                        mdc-theme--on-primary
+                      "
+                      aria-hidden="true"
+                      >more_horiz</span
+                    >
+                    <span
+                      class="
+                        mdc-tab__text-label
+                        mdc-theme--on-primary
+                        mdc-typography--caption
+                      "
+                      >More</span
+                    >
+                  </span> -->
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <script
+      src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="js/transform.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/viz.js"></script>
+    <script src="js/compare.js"></script>
+    <script src="js/samples.js"></script>
+    <script>
+      const snack_el = document.getElementById("snack");
+      const main_el = document.getElementById("main");
+      const compare_el = document.getElementById("compare_screen");
+      const samples_el = document.querySelector("#main > div.samples");
+      const result_el = document.querySelector("#result");
+
+      let main, result, compare, samples;
+
+      // register service worker
+      window.addEventListener("load", () => {
+        // From https://github.com/jakearchibald/wittr/blob/fecaad3a07c41a43230cf8fef2fc102f658981cf/public/js/main/IndexController.js
+
+        if (!navigator.serviceWorker) return;
+        const sw_ready = (worker) => {
+          // TODO: Currently force refreshing. Show toast.
+          worker.postMessage({ action: "skipWaiting" });
+        };
+        const sw_installing = (worker) => {
+          worker.addEventListener("statechange", () => {
+            if (worker.state === "installed") {
+              sw_ready(worker);
+            }
+          });
+        };
+
+        navigator.serviceWorker.register("./sw.js").then((reg) => {
+          if (!navigator.serviceWorker.controller) {
+            // Service worker is not associated
+            return;
+          }
+
+          // If there is a pending service worker, show refresh dialog / force refresh
+          if (reg.waiting) {
+            return sw_ready(reg.waiting);
+          }
+
+          if (reg.installing) {
+            // Wait for it to go into waiting state
+            return sw_installing(reg.installing);
+          }
+
+          // if an update happens later, wait for it to go into waiting state.
+          reg.addEventListener("updatefound", () => {
+            sw_installing(reg.installing);
+          });
+        });
+
+        // Ensure refresh is only called once.
+        // This works around a bug in "force update on reload".
+        var refreshing;
+        navigator.serviceWorker.addEventListener(
+          "controllerchange",
+          function () {
+            if (refreshing) return;
+            window.location.reload();
+            refreshing = true;
+          }
+        );
+      });
+
+      window.addEventListener("load", () => {
+        window.mdc.autoInit();
+        transform.then((Module) => {
+          main = new MainView(main_el, snack_el);
+          result = new Visualization(result_el, Module);
+          compare = new Compare(compare_el, result);
+          samples = new Samples(samples_el);
+
+          main.c.addEventListener("select_image", (e) => {
+            compare.set_image(e.detail.urls);
+            compare.show_compare_screen();
+          });
+
+          main.c.addEventListener("samples", () => {
+            samples.show();
+          });
+
+          compare.c.addEventListener("back", () => {
+            main.c.scrollIntoView({ behavior: "smooth" });
+          });
+
+          samples.c.addEventListener("select_sample", (e) => {
+            compare.set_image(e.detail.image_sources);
+            compare.show_compare_screen();
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
