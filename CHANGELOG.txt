@@ -1,0 +1,13 @@
+## [Unreleased]
+- Advanced mode to allow users to choose the transformation (identity, similarity, affine, thin plate spline)
+- Photometric transform
+- Support landscape view mode
+- More visualisation method (slider, hover, difference, fade)
+
+## [0.1.0] - 2021-11-19
+- 5 sample use cases (book, painting, photograph, satellite, music)
+- Uses Affine transformation by default
+- Includes toggle visualisation with 3 speeds
+- Works on both desktop and mobile phone web browser
+- Can be installed as an offline application (progressive web app) in mobile phones
+
