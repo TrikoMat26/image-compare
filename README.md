@@ -1,5 +1,9 @@
 # Image Compare
-Image Compare is a lightweight, standalone and offline application to visually compare a pair of images and highlight their differences. This application can be used in desktop computers and mobile phones without requiring installation as it runs entires in a web browser. Image Compare is an open source software developed and maintained by the [VGG Oxford](https://www.robots.ox.ac.uk/~vgg/). More details are available at the Image Compare [software page](https://robots.ox.ac.uk/~vgg/software/image-compare/).
+Image Compare is a lightweight, standalone and offline application to visually compare a pair of images and highlight their differences. This application can be used in desktop computers and mobile phones without requiring installation as it runs entires in a web browser. Image Compare is an open source software developed and maintained by the [VGG Oxford](https://www.robots.ox.ac.uk/~vgg/). 
+
+More details about Image Compare software application is available in the following websites:
+ - https://robots.ox.ac.uk/~vgg/software/image-compare/
+ - https://vgg.gitlab.io/image-compare/ (mirror)
 
 The latest version of Image Compare software application is available at: https://robots.ox.ac.uk/~vgg/software/image-compare/app/latest/
 
