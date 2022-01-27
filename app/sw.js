@@ -3,7 +3,7 @@
 // https://vaadin.com/learn/tutorials/learn-pwa/turn-website-into-a-pwa
 // https://github.com/jakearchibald/wittr/blob/cache-avatars/public/js/sw/index.js
 // Cache
-const CACHE_NAME = "imcomp-mdc-pwa-v2";
+const CACHE_NAME = "imcomp-mdc-pwa-v3";
 const staticAssets = [
     './',
     './manifest.json',
@@ -19,7 +19,7 @@ const staticAssets = [
     './images/usecases/book/case2-traherne2-b-original.jpg',
     './images/usecases/churchill/case3-churchill-1.jpg',
     './images/usecases/churchill/case3-churchill-2.jpg',
-    './images/usecases/painting/giovanni-1.jpg.jpg',
+    './images/usecases/painting/giovanni-1.jpg',
     './images/usecases/painting/giovanni-2.jpg',
     './images/usecases/music/case5-music-sheet-1.jpg',
     './images/usecases/music/case5-music-sheet-2.jpg',
