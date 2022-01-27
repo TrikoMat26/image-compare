@@ -365,6 +365,7 @@
         width: fit-content;
         flex: 0 1 auto;
         position: relative;
+        border: 1px black solid;
       }
       #result > canvas {
         padding: 0.25em;
@@ -373,8 +374,8 @@
       }
 
       #result > div.image_slider {
-        width: calc(100% - 0.5em);
-        height: 4px;
+        width: 100%;
+        height: 0.25em;
         position: absolute;
         left: 50%;
         top: 50%;
@@ -384,8 +385,8 @@
         z-index: 1;
       }
       #result > div.image_slider.horizontal {
-        width: 4px;
-        height: calc(100% - 0.5em);
+        width: 0.25em;
+        height: 100%;
       }
       #result > div.image_slider::after {
         content: "";
