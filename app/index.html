@@ -834,95 +834,283 @@
             <span class="mdc-linear-progress__bar-inner"></span>
           </div>
         </div>
-        <div class="mdc-tab-bar mdc-theme--primary-bg">
-          <div class="mdc-tab-scroller">
-            <div class="mdc-tab-scroller__scroll-area">
-              <div class="mdc-tab-scroller__scroll-content">
-                <button id="back" class="mdc-tab mdc-tab--stacked">
-                  <span class="mdc-tab__content">
-                    <span
-                      class="
-                        mdc-tab__icon
-                        material-icons
-                        mdc-typography--caption
-                        mdc-theme--on-primary
-                      "
-                      aria-hidden="true"
-                      >arrow_back_ios_new</span
-                    >
-                    <span
-                      class="
-                        mdc-tab__text-label
-                        mdc-theme--on-primary
-                        mdc-typography--caption
-                      "
-                      >Back</span
-                    >
+        <div class="w-100 fr f-auto mdc-theme--primary-bg mdc-elevation--z4">
+          <button id="back" class="mdc-tab mdc-tab--stacked">
+            <span class="mdc-tab__content">
+              <span
+                class="mdc-tab__icon material-icons mdc-typography--caption mdc-theme--on-primary"
+                aria-hidden="true"
+                >arrow_back_ios_new</span
+              >
+              <span
+                class="mdc-tab__text-label mdc-theme--on-primary mdc-typography--caption"
+                >Back</span
+              >
+            </span>
+          </button>
+          <div class="mdc-tab">
+            <span class="mdc-tab__content">
+              <div
+                class="mdc-select mdc-select--outlined gone"
+                data-mdc-auto-init="MDCSelect"
+              >
+                <div
+                  class="mdc-select__anchor"
+                  role="button"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="outlined-select-label"
+                >
+                  <span class="mdc-notched-outline">
+                    <span class="mdc-notched-outline__leading"></span>
+                    <span class="mdc-notched-outline__notch">
+                      <span
+                        id="outlined-select-label"
+                        class="mdc-floating-label mdc-theme--on-primary"
+                        >Visualisation</span
+                      >
+                    </span>
+                    <span class="mdc-notched-outline__trailing"></span>
                   </span>
-                </button>
-                <button class="mdc-tab mdc-tab--stacked">
-                  <span class="mdc-tab__content">
+                  <span class="mdc-select__selected-text-container">
                     <span
-                      class="
-                        mdc-tab__icon
-                        material-icons
-                        mdc-typography--caption
-                        mdc-theme--on-primary
-                      "
-                      aria-hidden="true"
-                    ></span>
-                    <span
-                      class="
-                        mdc-tab__text-label
-                        mdc-theme--on-primary
-                        mdc-typography--caption
-                      "
-                    ></span>
-                  </span>
-                </button>
-                <button id="more" class="mdc-tab mdc-tab--stacked">
-                  <span class="mdc-tab__content">
-                    <span
-                      class="
-                        mdc-tab__icon
-                        material-icons
-                        mdc-typography--caption
-                        mdc-theme--on-primary
-                      "
-                      aria-hidden="true"
-                    ></span>
-                    <span
-                      class="
-                        mdc-tab__text-label
-                        mdc-theme--on-primary
-                        mdc-typography--caption
-                      "
+                      id="demo-selected-text"
+                      class="mdc-select__selected-text mdc-theme--on-primary"
                     ></span>
                   </span>
-                  <!-- <span class="mdc-tab__content">
-                    <span
-                      class="
-                        mdc-tab__icon
-                        material-icons
-                        mdc-typography--caption
-                        mdc-theme--on-primary
-                      "
-                      aria-hidden="true"
-                      >more_horiz</span
+                  <span class="mdc-select__dropdown-icon">
+                    <svg
+                      class="mdc-select__dropdown-icon-graphic"
+                      viewBox="7 10 10 5"
+                      focusable="false"
                     >
-                    <span
-                      class="
-                        mdc-tab__text-label
-                        mdc-theme--on-primary
-                        mdc-typography--caption
-                      "
-                      >More</span
+                      <polygon
+                        class="mdc-select__dropdown-icon-active"
+                        stroke="none"
+                        fill-rule="evenodd"
+                        points="7 10 12 15 17 10"
+                      ></polygon>
+                      <polygon
+                        class="mdc-select__dropdown-icon-inactive"
+                        stroke="none"
+                        fill-rule="evenodd"
+                        points="7 15 12 10 17 15"
+                      ></polygon>
+                    </svg>
+                  </span>
+                </div>
+                <div
+                  class="mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth"
+                >
+                  <ul
+                    class="mdc-deprecated-list"
+                    role="listbox"
+                    aria-label="Visualisation picker listbox"
+                  >
+                    <li
+                      class="mdc-deprecated-list-item"
+                      aria-selected="false"
+                      data-value="diff"
+                      role="option"
                     >
-                  </span> -->
-                </button>
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span class="mdc-deprecated-list-item__text">
+                        Difference
+                      </span>
+                    </li>
+                    <li
+                      class="mdc-deprecated-list-item"
+                      aria-selected="false"
+                      data-value="hover"
+                      role="option"
+                    >
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span class="mdc-deprecated-list-item__text">
+                        Hover
+                      </span>
+                    </li>
+                    <li
+                      class="mdc-deprecated-list-item mdc-deprecated-list-item"
+                      aria-selected="false"
+                      data-value="overlay"
+                      role="option"
+                    >
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span class="mdc-deprecated-list-item__text">
+                        Overlay
+                      </span>
+                    </li>
+                    <li
+                      class="mdc-deprecated-list-item"
+                      aria-selected="false"
+                      data-value="slide"
+                      role="option"
+                    >
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span class="mdc-deprecated-list-item__text">
+                        Slide
+                      </span>
+                    </li>
+                    <li
+                      class="mdc-deprecated-list-item mdc-deprecated-list-item--selected"
+                      aria-selected="true"
+                      data-value="toggle"
+                      role="option"
+                    >
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span class="mdc-deprecated-list-item__text">
+                        Toggle
+                      </span>
+                    </li>
+                  </ul>
+                </div>
               </div>
-            </div>
+              <div
+                class="mdc-select mdc-select--filled"
+                data-mdc-auto-init="MDCSelect"
+              >
+                <div
+                  class="mdc-select__anchor"
+                  role="button"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="selected-text"
+                >
+                  <span class="mdc-select__ripple"></span>
+                  <!-- <span
+                    id="select-label"
+                    class="mdc-floating-label mdc-theme--on-primary"
+                    >Visualisation</span
+                  > -->
+                  <span class="mdc-select__selected-text-container">
+                    <span
+                      id="selected-text"
+                      class="mdc-select__selected-text mdc-theme--on-primary mdc-typography--button"
+                      >Toggle</span
+                    >
+                  </span>
+                  <span class="mdc-select__dropdown-icon">
+                    <svg
+                      class="mdc-select__dropdown-icon-graphic"
+                      viewBox="7 10 10 5"
+                      focusable="false"
+                    >
+                      <polygon
+                        class="mdc-select__dropdown-icon-active"
+                        stroke="none"
+                        fill-rule="evenodd"
+                        points="7 10 12 15 17 10"
+                      ></polygon>
+                      <polygon
+                        class="mdc-select__dropdown-icon-inactive"
+                        stroke="none"
+                        fill-rule="evenodd"
+                        points="7 15 12 10 17 15"
+                      ></polygon>
+                    </svg>
+                  </span>
+                  <span class="mdc-line-ripple"></span>
+                </div>
+                <div
+                  class="mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth"
+                >
+                  <ul
+                    class="mdc-deprecated-list"
+                    role="listbox"
+                    aria-label="Visualisation picker listbox"
+                  >
+                    <li
+                      class="mdc-deprecated-list-item"
+                      aria-selected="false"
+                      data-value="diff"
+                      role="option"
+                    >
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span
+                        class="mdc-deprecated-list-item__text mdc-typography--body1"
+                      >
+                        Difference
+                      </span>
+                    </li>
+                    <li
+                      class="mdc-deprecated-list-item"
+                      aria-selected="false"
+                      data-value="hover"
+                      role="option"
+                    >
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span
+                        class="mdc-deprecated-list-item__text mdc-typography--body1"
+                      >
+                        Hover
+                      </span>
+                    </li>
+                    <li
+                      class="mdc-deprecated-list-item mdc-deprecated-list-item"
+                      aria-selected="false"
+                      data-value="overlay"
+                      role="option"
+                    >
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span
+                        class="mdc-deprecated-list-item__text mdc-typography--body1"
+                      >
+                        Overlay
+                      </span>
+                    </li>
+                    <li
+                      class="mdc-deprecated-list-item"
+                      aria-selected="false"
+                      data-value="slide"
+                      role="option"
+                    >
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span
+                        class="mdc-deprecated-list-item__text mdc-typography--body1"
+                      >
+                        Slide
+                      </span>
+                    </li>
+                    <li
+                      class="mdc-deprecated-list-item mdc-deprecated-list-item--selected"
+                      aria-selected="true"
+                      data-value="toggle"
+                      role="option"
+                    >
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span
+                        class="mdc-deprecated-list-item__text mdc-typography--body1"
+                      >
+                        Toggle
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </span>
           </div>
+          <button id="more" class="mdc-tab mdc-tab--stacked">
+            <!-- <span class="mdc-tab__content">
+              <span
+                class="mdc-tab__icon material-icons mdc-typography--caption mdc-theme--on-primary"
+                aria-hidden="true"
+              ></span>
+              <span
+                class="mdc-tab__text-label mdc-theme--on-primary mdc-typography--caption"
+              ></span>
+            </span> -->
+            <span class="mdc-tab__content">
+              <span
+                class="mdc-tab__icon material-icons mdc-typography--caption mdc-theme--on-primary"
+                aria-hidden="true"
+                >info</span
+              >
+              <span
+                class="mdc-tab__text-label mdc-theme--on-primary mdc-typography--caption"
+                >Info</span
+              >
+            </span>
+          </button>
         </div>
       </footer>
     </div>
