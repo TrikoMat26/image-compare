@@ -1121,14 +1121,18 @@
     <script src="js/transform.js"></script>
     <script src="js/main.js"></script>
     <script src="js/viz.js"></script>
+    <script src="js/action.js"></script>
     <script src="js/compare.js"></script>
     <script src="js/samples.js"></script>
     <script>
       const snack_el = document.getElementById("snack");
       const main_el = document.getElementById("main");
       const compare_el = document.getElementById("compare_screen");
+      const action_el = document.getElementById("action");
       const samples_el = document.querySelector("div.samples");
       const result_el = document.querySelector("#result");
+      const canvas_el = result_el.querySelector("canvas");
+      const dialog_el = document.getElementById("info-dialog");
 
       let main, result, compare, samples;
 
@@ -1188,8 +1192,9 @@
         window.mdc.autoInit();
         transform.then((Module) => {
           main = new MainView(main_el, snack_el);
-          result = new Visualization(result_el, Module);
-          compare = new Compare(compare_el, result);
+          result = new Visualization(canvas_el, Module);
+          action_bar = new Action(action_el, result);
+          compare = new Compare(compare_el, result, action_bar);
           samples = new Samples(samples_el);
 
           main.c.addEventListener("select_image", (e) => {
