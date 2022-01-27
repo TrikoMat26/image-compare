@@ -36,16 +36,26 @@
     />
     <link
       rel="preload"
-      href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css"
+      href="https://unpkg.com/material-components-web@v13.0.0/dist/material-components-web.min.css"
       as="style"
       type="text/css"
+      integrity="sha384-zYyxh4r8CWy0xvG1ua+/rTeQmFY/YhmqzzaqluuGnN9+fCFSj/jF1AwiW9p+KUW/"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href="https://unpkg.com/material-components-web@v13.0.0/dist/material-components-web.min.js"
+      as="script"
+      type="text/javascript"
+      integrity="sha384-8iww5N0HFABAFdwBAcqef8367heaZqV6cGdI2zjVr6ztCVbINoKlnoyYyCvkEtAt"
       crossorigin="anonymous"
     />
 
     <!-- Required styles for Material Web -->
     <link
       rel="stylesheet"
-      href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css"
+      href="https://unpkg.com/material-components-web@v13.0.0/dist/material-components-web.min.css"
+      integrity="sha384-zYyxh4r8CWy0xvG1ua+/rTeQmFY/YhmqzzaqluuGnN9+fCFSj/jF1AwiW9p+KUW/"
       crossorigin="anonymous"
     />
 
@@ -65,6 +75,7 @@
         box-sizing: border-box;
       }
       html {
+        height: 100vh;
         height: -webkit-fill-available;
         overflow: hidden;
       }
@@ -75,19 +86,36 @@
         min-height: -webkit-fill-available;
         overflow: hidden;
       }
+      /* Disable text transforms in tab */
       .mdc-tab {
         --mdc-typography-caption-text-transform: none;
         --mdc-typography-body1-text-transform: none;
       }
 
-      .mdc-select {
-        pointer-events: auto;
-        width: max(128px, min(256px, 40vw));
-      }
-
       /* Info dialog */
       .mdc-dialog .mdc-dialog__close {
         align-self: flex-end;
+      }
+      .mdc-dialog .mdc-dialog__content {
+        padding-top: 0;
+      }
+      #info-dialog-title {
+        margin-top: 0;
+      }
+      .info-dialog__content--section {
+        margin: 0 0 1rem 0;
+      }
+      .info-dialog__content--section > p {
+        margin-top: 0;
+      }
+      .info-dialog__content--section > p:first-child {
+        margin: 0;
+      }
+
+      /* Select dropdown colours */
+      .mdc-select {
+        pointer-events: auto;
+        width: max(128px, min(256px, 40vw));
       }
 
       .mdc-select--filled:not(.mdc-select--disabled) .mdc-select__anchor {
@@ -116,6 +144,10 @@
         fill: var(--mdc-theme-on-primary, #fff);
       }
 
+      /* radio button */
+      .mdc-radio {
+        --mdc-theme-secondary: var(--mdc-theme-primary, #6200ee);
+      }
       body {
         margin: 0;
         padding: 0;
@@ -301,8 +333,14 @@
         width: 90%;
       }
       #overlay > span {
-        flex: 0 1 auto;
-        margin: 0 0.25em;
+        flex: 0 1 48px;
+        line-height: 0;
+        text-align: center;
+      }
+      #overlay > span > img {
+        max-width: 100%;
+        height: 100%;
+        object-fit: contain;
       }
       #overlay > .mdc-slider {
         flex: 1 0 auto;
@@ -327,6 +365,7 @@
         width: fit-content;
         flex: 0 1 auto;
         position: relative;
+        border: 1px black solid;
       }
       #result > canvas {
         padding: 0.25em;
@@ -335,19 +374,19 @@
       }
 
       #result > div.image_slider {
-        width: calc(100% - 0.5em);
-        height: 2px;
+        width: 100%;
+        height: 0.25em;
         position: absolute;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
-        background-color: var(--mdc-theme-primary, #6200ee);
+        background-color: var(--mdc-theme-primary, #000);
         cursor: pointer;
         z-index: 1;
       }
       #result > div.image_slider.horizontal {
-        width: 2px;
-        height: calc(100% - 0.5em);
+        width: 0.25em;
+        height: 100%;
       }
       #result > div.image_slider::after {
         content: "";
@@ -358,7 +397,8 @@
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
-        background-color: var(--mdc-theme-primary, #6200ee);
+        border: 4px solid var(--mdc-theme-primary, #000);
+        background-color: #fff;
         cursor: pointer;
         z-index: 1;
       }
@@ -409,7 +449,7 @@
       </div>
     </aside>
     <div
-      class="mdc-dialog mdc-dialog--sheet mdc-dialog--no-content-padding"
+      class="mdc-dialog mdc-dialog--sheet"
       aria-modal="true"
       aria-labelledby="info-dialog-title"
       aria-describedby="info-dialog-content"
@@ -419,38 +459,74 @@
       <div class="mdc-dialog__scrim" data-mdc-dialog-action="cancel"></div>
       <div class="mdc-dialog__container">
         <div class="mdc-dialog__surface">
+          <button
+            class="mdc-icon-button material-icons mdc-dialog__close"
+            data-mdc-dialog-action="close"
+          >
+            close
+          </button>
           <div class="mdc-dialog__content">
             <div class="info-dialog">
               <h3
-                tabindex="0"
                 id="info-dialog-title"
                 class="info-dialog__title mdc-typography--headline5"
               >
                 Image Compare
               </h3>
               <div id="info-dialog-content" class="info-dialog__content">
-                <p class="mdc-typography--subtitle1">
-                  App Version
-                  <br />
-                  <span
-                    class="mdc-typography--caption mdc-theme--text-secondary-on-background"
-                    >v0.2.0</span
-                  >
-                </p>
-                <p class="mdc-typography--subtitle1">
-                  Homepage
-                  <br />
-                  <a
-                    href="https://www.robots.ox.ac.uk/~vgg/software/image-compare/"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    <span
-                      class="mdc-typography--caption mdc-theme--text-secondary-on-background"
-                      >Link</span
-                    ></a
-                  >
-                </p>
+                <div
+                  class="info-dialog__content--section mdc-typography--caption mdc-theme--text-secondary-on-background"
+                >
+                  <p class="mdc-typography--subtitle1">Version</p>
+                  <p>0.2.0 (Jan 22, 2022)</p>
+                </div>
+                <div
+                  class="info-dialog__content--section mdc-typography--caption mdc-theme--text-secondary-on-background"
+                >
+                  <p class="mdc-typography--subtitle1">About</p>
+                  <p>
+                    A lightweight, standalone and offline application to
+                    highlight the differences between a pair of images.
+                  </p>
+                  <p>
+                    Developed &amp; Maintained by
+                    <a
+                      href="https://www.robots.ox.ac.uk/~vgg/"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      VGG, Oxford</a
+                    >
+                  </p>
+                  <p>
+                    For more details see
+                    <br />
+                    <a
+                      href="https://www.robots.ox.ac.uk/~vgg/software/image-compare/"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      https://www.robots.ox.ac.uk/~vgg/software/image-compare/</a
+                    >
+                  </p>
+                </div>
+                <div
+                  class="info-dialog__content--section mdc-typography--caption mdc-theme--text-secondary-on-background"
+                >
+                  <p class="mdc-typography--subtitle1">Support / Feedback</p>
+                  <p>
+                    If you would like to provide <b>feedback</b>, request for a
+                    <b>feature</b>, or report a <b>bug</b>, please submit it in
+                    our
+                    <a
+                      href="https://gitlab.com/vgg/image-compare/-/issues"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      issues portal</a
+                    >.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -529,22 +605,6 @@
             ></span>
             <img
               class="mdc-list-item__graphic"
-              src="images/usecases/book/case2-traherne1.jpg"
-            />
-            <img
-              class="mdc-list-item__graphic"
-              src="images/usecases/book/case2-traherne2.jpg"
-            />
-            <span class="mdc-list-item__text">Book editions</span>
-          </li>
-          <li role="separator" class="mdc-list-divider"></li>
-          <li class="mdc-list-item f-center" tabindex="-1">
-            <span
-              class="mdc-list-item__ripple"
-              data-mdc-auto-init="MDCRipple"
-            ></span>
-            <img
-              class="mdc-list-item__graphic"
               src="images/usecases/churchill/case3-churchill-1.jpg"
             />
             <img
@@ -561,13 +621,45 @@
             ></span>
             <img
               class="mdc-list-item__graphic"
-              src="images/usecases/Ghent/case1-Ghent-before.jpg"
+              src="images/usecases/painting/giovanni-1.jpg"
             />
             <img
               class="mdc-list-item__graphic"
-              src="images/usecases/Ghent/case1-Ghent-after.jpg"
+              src="images/usecases/painting/giovanni-2.jpg"
             />
             <span class="mdc-list-item__text">Art restoration</span>
+          </li>
+          <li role="separator" class="mdc-list-divider"></li>
+          <li class="mdc-list-item f-center" tabindex="-1">
+            <span
+              class="mdc-list-item__ripple"
+              data-mdc-auto-init="MDCRipple"
+            ></span>
+            <img
+              class="mdc-list-item__graphic"
+              src="images/usecases/book/case2-traherne2-a-original.jpg"
+            />
+            <img
+              class="mdc-list-item__graphic"
+              src="images/usecases/book/case2-traherne2-b-original.jpg"
+            />
+            <span class="mdc-list-item__text">Book editions</span>
+          </li>
+          <li role="separator" class="mdc-list-divider"></li>
+          <li class="mdc-list-item f-center" tabindex="-1">
+            <span
+              class="mdc-list-item__ripple"
+              data-mdc-auto-init="MDCRipple"
+            ></span>
+            <img
+              class="mdc-list-item__graphic"
+              src="images/usecases/satellite/Original-Tokyo-2017.jpg"
+            />
+            <img
+              class="mdc-list-item__graphic"
+              src="images/usecases/satellite/Original-Tokyo-1986.jpg"
+            />
+            <span class="mdc-list-item__text">Satellite imagery</span>
           </li>
           <li role="separator" class="mdc-list-divider"></li>
           <li class="mdc-list-item f-center" tabindex="-1">
@@ -593,13 +685,13 @@
             ></span>
             <img
               class="mdc-list-item__graphic"
-              src="images/usecases/satellite/Original-Tokyo-2017.jpg"
+              src="images/usecases/puzzle/case6-puzzle-1-a.jpg"
             />
             <img
               class="mdc-list-item__graphic"
-              src="images/usecases/satellite/Original-Tokyo-1986.jpg"
+              src="images/usecases/puzzle/case6-puzzle-1-b.jpg"
             />
-            <span class="mdc-list-item__text">Satellite imagery</span>
+            <span class="mdc-list-item__text">Puzzle</span>
           </li>
           <li role="separator" class="mdc-list-divider"></li>
         </ul>
@@ -764,7 +856,12 @@
             </span>
           </div>
           <div id="overlay" class="fr f-center hide">
-            <span class="mdc-typography--subtitle1">1</span>
+            <span
+              ><img
+                src="images/logo/image-compare-1.svg"
+                alt="1"
+                title="Image 1"
+            /></span>
             <div class="mdc-slider" data-mdc-auto-init="MDCSlider">
               <input
                 class="mdc-slider__input"
@@ -785,7 +882,12 @@
                 <div class="mdc-slider__thumb-knob"></div>
               </div>
             </div>
-            <span class="mdc-typography--subtitle1">2</span>
+            <span
+              ><img
+                src="images/logo/image-compare-2.svg"
+                alt="2"
+                title="Image 2"
+            /></span>
           </div>
         </div>
         <button id="compare" class="mdc-button mdc-button--raised">
@@ -1103,7 +1205,8 @@
       </footer>
     </div>
     <script
-      src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"
+      src="https://unpkg.com/material-components-web@v13.0.0/dist/material-components-web.min.js"
+      integrity="sha384-8iww5N0HFABAFdwBAcqef8367heaZqV6cGdI2zjVr6ztCVbINoKlnoyYyCvkEtAt"
       crossorigin="anonymous"
     ></script>
     <script src="js/transform.js"></script>

@@ -218,6 +218,7 @@ class Action {
     }
 
     dragElement(el) {
+        // Track width and padding are equal
         const _PADDING = (0.25 * parseFloat(getComputedStyle(el.parentElement).fontSize));
         const dragMove = (e) => {
           e = e || window.event;
@@ -240,9 +241,11 @@ class Action {
 
           // TODO Get padding programmatically of the canvas element
           // Now the padding is manually copied from CSS - 2.5% LR and 0.5em TB;
-          const PADDING = _PADDING
+          const PADDING = _PADDING;
 
-          const m = PADDING;
+          // TODO: Done manually
+          // need to do math -> (padding - track_width / 2) < - > width - track width
+          const m = PADDING / 2;
           const M = this.HORIZONTAL ? (w - PADDING) : (h - PADDING);
 
           let _slide_factor = 0.5;
