@@ -294,6 +294,55 @@
         </div>
       </div>
     </aside>
+    <div
+      class="mdc-dialog mdc-dialog--sheet mdc-dialog--no-content-padding"
+      aria-modal="true"
+      aria-labelledby="info-dialog-title"
+      aria-describedby="info-dialog-content"
+      id="info-dialog"
+      data-mdc-auto-init="MDCDialog"
+    >
+      <div class="mdc-dialog__scrim" data-mdc-dialog-action="cancel"></div>
+      <div class="mdc-dialog__container">
+        <div class="mdc-dialog__surface">
+          <div class="mdc-dialog__content">
+            <div class="info-dialog">
+              <h3
+                tabindex="0"
+                id="info-dialog-title"
+                class="info-dialog__title mdc-typography--headline5"
+              >
+                Image Compare
+              </h3>
+              <div id="info-dialog-content" class="info-dialog__content">
+                <p class="mdc-typography--subtitle1">
+                  App Version
+                  <br />
+                  <span
+                    class="mdc-typography--caption mdc-theme--text-secondary-on-background"
+                    >v0.2.0</span
+                  >
+                </p>
+                <p class="mdc-typography--subtitle1">
+                  Homepage
+                  <br />
+                  <a
+                    href="https://www.robots.ox.ac.uk/~vgg/software/image-compare/"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    <span
+                      class="mdc-typography--caption mdc-theme--text-secondary-on-background"
+                      >Link</span
+                    ></a
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div id="main" class="h-100">
       <section class="logo w-100 fc f-center f-justify-center">
         <img
@@ -756,6 +805,10 @@
 
           compare.c.addEventListener("back", () => {
             main.c.scrollIntoView({ behavior: "smooth" });
+          });
+
+          compare.c.addEventListener("more", () => {
+            dialog_el.MDCDialog.open();
           });
 
           samples.c.addEventListener("select_sample", (e) => {

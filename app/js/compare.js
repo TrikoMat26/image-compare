@@ -42,6 +42,10 @@ class Compare {
 
         this.back_btn.onclick = this.back.bind(this);
 
+        this.more_btn.onclick = () => {
+            this.c.dispatchEvent(new CustomEvent('more'));
+        }
+
         this.input.oninput = this.image_onchange.bind(this);
         [].forEach.call(this.v_image_list.querySelectorAll('li'), (el) => {
             el.onclick = this.handle_image_click.bind(this);
