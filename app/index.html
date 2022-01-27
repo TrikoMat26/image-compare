@@ -76,19 +76,21 @@
         min-height: -webkit-fill-available;
         overflow: hidden;
       }
+      /* Disable text transforms in tab */
       .mdc-tab {
         --mdc-typography-caption-text-transform: none;
         --mdc-typography-body1-text-transform: none;
       }
 
-      .mdc-select {
-        pointer-events: auto;
-        width: max(128px, min(256px, 40vw));
-      }
-
       /* Info dialog */
       .mdc-dialog .mdc-dialog__close {
         align-self: flex-end;
+      }
+
+      /* Select dropdown colours */
+      .mdc-select {
+        pointer-events: auto;
+        width: max(128px, min(256px, 40vw));
       }
 
       .mdc-select--filled:not(.mdc-select--disabled) .mdc-select__anchor {
@@ -117,6 +119,10 @@
         fill: var(--mdc-theme-on-primary, #fff);
       }
 
+      /* radio button */
+      .mdc-radio {
+        --mdc-theme-secondary: var(--mdc-theme-primary, #6200ee);
+      }
       body {
         margin: 0;
         padding: 0;
