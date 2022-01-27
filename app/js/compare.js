@@ -1,23 +1,22 @@
+
 class Compare {
-    constructor(container, result) {
+    constructor(container, result, action_bar) {
         this.c = container;
         this.cc = document.getElementById('compare_container');
         this.h_image_list = this.c.querySelector('ul.mdc-image-list.horizontal-image-list');
         this.v_image_list = this.c.querySelector('ul.mdc-image-list.vertical-image-list');
-        this.action_container = this.c.querySelector('div.action');
-        this.compare_btn = document.getElementById('compare');
-        this.compare_label = this.compare_btn.querySelector('span.mdc-button__label');
+
+        this.action_bar = action_bar;
         this.result = result;
 
+        this.compare_btn = document.getElementById('compare');
+        this.compare_label = this.compare_btn.querySelector('span.mdc-button__label');
+
         this.footer = this.c.querySelector('footer');
+        this.select = this.footer.querySelector('.mdc-tab .mdc-select:last-child')
         this.back_btn = document.getElementById('back');
         this.more_btn = document.getElementById('more');
 
-        this.toggle = document.getElementById('toggle');
-        // TODO: Infer from document or set the document
-        this.TOGGLE_SPEED = 2;
-
-        this.toggle.onclick = this.handle_toggle.bind(this);
 
         this.input = document.getElementById('image_select_input2');
         const process_images = (function(){
@@ -34,13 +33,20 @@ class Compare {
             })
         }
 
-        this.result.canvas.addEventListener('transform', () => {
+        this.c.addEventListener('transform', () => {
             this.show_result_screen();
             this.compare_label.textContent = 'Compare';
             this.compare_btn.disabled = false;
         });
 
+        this.c.addEventListener('MDCSelect:change', ({detail: {value}}) => {
+            this.action_bar.MODE = value;
+        });
         this.back_btn.onclick = this.back.bind(this);
+
+        this.more_btn.onclick = () => {
+            this.c.dispatchEvent(new CustomEvent('more'));
+        }
 
         this.input.oninput = this.image_onchange.bind(this);
         [].forEach.call(this.v_image_list.querySelectorAll('li'), (el) => {
@@ -50,32 +56,6 @@ class Compare {
 
     back () {
         this.c.dispatchEvent(new CustomEvent('back'));
-    }
-
-    handle_toggle(e) {
-        const clicked_btn = e.target.closest('button.mdc-tab');
-        if (!(clicked_btn)) {
-            // Button is not clicked?
-            return;
-        }
-
-        const active_btn = e.currentTarget.querySelector('button.mdc-tab.active');
-        if (clicked_btn === active_btn) {
-            // Active button is clicked
-            return;
-        }
-
-        clicked_btn.classList.add('active', 'mdc-theme--primary-bg');
-        active_btn.classList.remove('active', 'mdc-theme--primary-bg');
-
-        const clicked_label = clicked_btn.querySelector('span.mdc-tab__text-label');
-        const active_label = active_btn.querySelector('span.mdc-tab__text-label');
-
-        active_label.classList.replace('mdc-theme--on-primary', 'mdc-theme--primary');
-        clicked_label.classList.replace('mdc-theme--primary', 'mdc-theme--on-primary');
-
-        this.TOGGLE_SPEED = Number.parseInt(clicked_btn.dataset.speed);
-        this.result.toggle_images(this.TOGGLE_SPEED);
     }
 
     handle_image_click (e) {
@@ -144,13 +124,20 @@ class Compare {
     }
 
     show_compare_screen () {
-        this.result.toggle_images(0);
+        this.select.classList.add('hide');
+        this.select.MDCSelect.setValue('toggle');
+        this.select.querySelector('#selected-text').textContent = 'Toggle';
+
         this.cc.scrollIntoView({behavior: 'smooth', inline: 'start'});
+        window.requestAnimationFrame(() => {
+            this.action_bar.reset();
+        })
         this.back_btn.onclick = this.back.bind(this);
     }
 
     show_result_screen () {
-        this.result.toggle_images(this.TOGGLE_SPEED);
+        this.select.classList.remove('hide');
+        this.action_bar.show();
         this.cc.scrollIntoView({behavior: 'smooth', inline: 'end'})
         this.back_btn.onclick = this.show_compare_screen.bind(this);
     }

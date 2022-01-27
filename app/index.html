@@ -77,7 +77,45 @@
       }
       .mdc-tab {
         --mdc-typography-caption-text-transform: none;
+        --mdc-typography-body1-text-transform: none;
       }
+
+      .mdc-select {
+        pointer-events: auto;
+        width: max(128px, min(256px, 40vw));
+      }
+
+      /* Info dialog */
+      .mdc-dialog .mdc-dialog__close {
+        align-self: flex-end;
+      }
+
+      .mdc-select--filled:not(.mdc-select--disabled) .mdc-select__anchor {
+        background-color: var(--mdc-theme-primary, #6200ee);
+      }
+      .mdc-select--filled:not(.mdc-select--disabled) .mdc-line-ripple::before,
+      .mdc-select--filled:not(.mdc-select--disabled):hover
+        .mdc-line-ripple::before,
+      .mdc-select--filled:not(.mdc-select--disabled) .mdc-line-ripple::after,
+      .mdc-select--filled:not(.mdc-select--disabled):hover
+        .mdc-line-ripple::after {
+        border-bottom-color: var(--mdc-theme-on-primary, #fff);
+      }
+
+      .mdc-select--outlined:not(.mdc-select--disabled)
+        .mdc-notched-outline__leading,
+      .mdc-select--outlined:not(.mdc-select--disabled)
+        .mdc-notched-outline__notch,
+      .mdc-select--outlined:not(.mdc-select--disabled)
+        .mdc-notched-outline__trailing {
+        border-color: var(--mdc-theme-on-primary, "rgba(0, 0, 0, 0.38)");
+      }
+      .mdc-select:not(.mdc-select--disabled) .mdc-select__dropdown-icon,
+      .mdc-select:not(.mdc-select--disabled).mdc-select--focused
+        .mdc-select__dropdown-icon {
+        fill: var(--mdc-theme-on-primary, #fff);
+      }
+
       body {
         margin: 0;
         padding: 0;
@@ -106,6 +144,10 @@
         justify-content: center;
       }
 
+      .f-auto > * {
+        flex: 1 1 auto;
+        margin: 0.5em;
+      }
       .f-spaced > * {
         flex: 0 0 auto;
         margin: 0.5em auto;
@@ -143,6 +185,10 @@
 
       .ty-100 {
         transform: translate3d(0, -100%, 0);
+      }
+
+      .text-center {
+        text-align: center;
       }
 
       #main {
@@ -209,7 +255,7 @@
         display: grid;
         min-height: 0;
         max-height: 100%;
-        grid-template-rows: 20vh 1fr auto;
+        grid-template-rows: 20vh minmax(0, 1fr) auto;
         grid-template-columns: 100vw 100vw;
       }
       #compare_container > .vertical-image-list {
@@ -233,23 +279,88 @@
         position: relative;
       }
 
-      #compare_container > div.action {
+      #action {
         grid-area: 3 / 2 / 4 / 3;
-        margin: auto auto 1.5em auto;
+        margin: auto;
+        display: grid;
+        grid-template-columns: auto;
+        grid-template-rows: auto;
       }
+      #action > * {
+        grid-area: 1 / 1;
+        place-self: center center;
+      }
+      #toggle {
+        width: auto;
+      }
+      #overlay {
+        min-width: 256px;
+        width: 90%;
+      }
+      #overlay > span {
+        flex: 0 1 auto;
+        margin: 0 0.25em;
+      }
+      #overlay > .mdc-slider {
+        flex: 1 0 auto;
+      }
+
       #compare {
         grid-area: 3 / 1 / 4 / 2;
         margin: auto auto 1.5em auto;
       }
 
+      div.result_container {
+        grid-area: 2 / 2;
+        position: relative;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
       #result {
-        grid-area: 2 / 2 / 3 / 3;
-        padding: 0 0.25em 0.5em 0.25em;
-        place-self: center center;
         min-height: 0;
+        width: fit-content;
+        flex: 0 1 auto;
+        position: relative;
+      }
+      #result > canvas {
+        padding: 0.25em;
+        max-width: 100%;
+        height: 100%;
       }
 
-      #compare_container > div.action > .mdc-tab-bar .mdc-tab {
+      #result > div.image_slider {
+        width: calc(100% - 0.5em);
+        height: 2px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: var(--mdc-theme-primary, #6200ee);
+        cursor: pointer;
+        z-index: 1;
+      }
+      #result > div.image_slider.horizontal {
+        width: 2px;
+        height: calc(100% - 0.5em);
+      }
+      #result > div.image_slider::after {
+        content: "";
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: var(--mdc-theme-primary, #6200ee);
+        cursor: pointer;
+        z-index: 1;
+      }
+
+      #action > .mdc-tab-bar .mdc-tab {
         height: 36px;
       }
 
@@ -294,6 +405,55 @@
         </div>
       </div>
     </aside>
+    <div
+      class="mdc-dialog mdc-dialog--sheet mdc-dialog--no-content-padding"
+      aria-modal="true"
+      aria-labelledby="info-dialog-title"
+      aria-describedby="info-dialog-content"
+      id="info-dialog"
+      data-mdc-auto-init="MDCDialog"
+    >
+      <div class="mdc-dialog__scrim" data-mdc-dialog-action="cancel"></div>
+      <div class="mdc-dialog__container">
+        <div class="mdc-dialog__surface">
+          <div class="mdc-dialog__content">
+            <div class="info-dialog">
+              <h3
+                tabindex="0"
+                id="info-dialog-title"
+                class="info-dialog__title mdc-typography--headline5"
+              >
+                Image Compare
+              </h3>
+              <div id="info-dialog-content" class="info-dialog__content">
+                <p class="mdc-typography--subtitle1">
+                  App Version
+                  <br />
+                  <span
+                    class="mdc-typography--caption mdc-theme--text-secondary-on-background"
+                    >v0.2.0</span
+                  >
+                </p>
+                <p class="mdc-typography--subtitle1">
+                  Homepage
+                  <br />
+                  <a
+                    href="https://www.robots.ox.ac.uk/~vgg/software/image-compare/"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    <span
+                      class="mdc-typography--caption mdc-theme--text-secondary-on-background"
+                      >Link</span
+                    ></a
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div id="main" class="h-100">
       <section class="logo w-100 fc f-center f-justify-center">
         <img
@@ -343,17 +503,11 @@
       <header class="mdc-top-app-bar mdc-top-app-bar--fixed">
         <div class="mdc-top-app-bar__row">
           <section
-            class="
-              mdc-top-app-bar__section mdc-top-app-bar__section--align-start
-            "
+            class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start"
           >
             <button
               id="samples_close_btn"
-              class="
-                material-icons
-                mdc-top-app-bar__navigation-icon
-                mdc-icon-button
-              "
+              class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button"
               aria-label="Close"
             >
               close
@@ -465,7 +619,7 @@
           >
             <img
               class="mdc-image-list__image"
-              src="images/logo/imcomp-logo-large.png"
+              src="images/logo/imcomp-logo-large-path.svg"
             />
           </li>
           <li
@@ -474,36 +628,35 @@
           >
             <img
               class="mdc-image-list__image"
-              src="images/logo/imcomp-logo-large.png"
+              src="images/logo/imcomp-logo-large-path.svg"
             />
           </li>
         </ul>
 
         <ul
-          class="
-            mdc-image-list
-            horizontal-image-list
-            fr
-            f-justify-center f-stretch
-          "
+          class="mdc-image-list horizontal-image-list fr f-justify-center f-stretch"
         >
           <li class="mdc-image-list__item fc f-center f-justify-center mw-100">
             <img
               class="mdc-image-list__image"
-              src="images/logo/imcomp-logo-large.png"
+              src="images/logo/imcomp-logo-large-path.svg"
             />
           </li>
           <li class="mdc-image-list__item fc f-center f-justify-center mw-100">
             <img
               class="mdc-image-list__image"
-              src="images/logo/imcomp-logo-large.png"
+              src="images/logo/imcomp-logo-large-path.svg"
             />
           </li>
         </ul>
+        <div class="result_container">
+          <div id="result">
+            <div class="image_slider hide horizontal"></div>
+            <canvas> </canvas>
+          </div>
+        </div>
 
-        <canvas id="result" class="mw-100 mh-100"> </canvas>
-
-        <div class="action">
+        <div id="action">
           <div id="toggle" class="mdc-tab-bar mdc-elevation--z4">
             <div class="mdc-tab-scroller">
               <div class="mdc-tab-scroller__scroll-area">
@@ -536,6 +689,101 @@
               </div>
             </div>
           </div>
+          <div id="slide" class="fr f-auto hide">
+            <div class="mdc-form-field" data-mdc-auto-init="MDCFormField">
+              <div
+                class="mdc-radio mdc-radio--touch"
+                data-mdc-auto-init="MDCRadio"
+              >
+                <input
+                  class="mdc-radio__native-control"
+                  type="radio"
+                  id="radio-horizontal"
+                  name="radio-slider"
+                  value="horizontal"
+                  checked
+                />
+                <div class="mdc-radio__background">
+                  <div class="mdc-radio__outer-circle"></div>
+                  <div class="mdc-radio__inner-circle"></div>
+                </div>
+                <div class="mdc-radio__ripple"></div>
+              </div>
+              <label for="radio-horizontal">Horizontal</label>
+            </div>
+            <div class="mdc-form-field" data-mdc-auto-init="MDCFormField">
+              <div
+                class="mdc-radio mdc-radio--touch"
+                data-mdc-auto-init="MDCRadio"
+              >
+                <input
+                  class="mdc-radio__native-control"
+                  type="radio"
+                  id="radio-vertical"
+                  name="radio-slider"
+                  value="vertical"
+                />
+                <div class="mdc-radio__background">
+                  <div class="mdc-radio__outer-circle"></div>
+                  <div class="mdc-radio__inner-circle"></div>
+                </div>
+                <div class="mdc-radio__ripple"></div>
+              </div>
+              <label for="radio-vertical">Vertical</label>
+            </div>
+          </div>
+          <div id="diff" class="hide">
+            <button
+              class="mdc-button mdc-button--touch mdc-button--icon-leading mdc-button--outlined"
+            >
+              <span
+                class="mdc-button__ripple"
+                data-mdc-auto-init="MDCRipple"
+              ></span>
+              <span class="mdc-button__touch"></span>
+              <i class="material-icons mdc-button__icon" aria-hidden="true"
+                >download</i
+              >
+              <span class="mdc-button__label">Download</span>
+            </button>
+          </div>
+          <div id="hover" class="hide fc f-center">
+            <span class="mdc-typography--subtitle1"
+              >Showing image: <span id="hover-image">1</span></span
+            >
+            <span
+              class="text-center mdc-typography--caption mdc-theme--text-hint-on-background"
+            >
+              <em
+                >Move finger / mouse over the result to toggle manually between
+                the images.</em
+              >
+            </span>
+          </div>
+          <div id="overlay" class="fr f-center hide">
+            <span class="mdc-typography--subtitle1">1</span>
+            <div class="mdc-slider" data-mdc-auto-init="MDCSlider">
+              <input
+                class="mdc-slider__input"
+                type="range"
+                min="0"
+                max="100"
+                value="50"
+                name="overlay"
+                aria-label="Image overlay slider"
+              />
+              <div class="mdc-slider__track">
+                <div class="mdc-slider__track--inactive"></div>
+                <div class="mdc-slider__track--active">
+                  <div class="mdc-slider__track--active_fill"></div>
+                </div>
+              </div>
+              <div class="mdc-slider__thumb">
+                <div class="mdc-slider__thumb-knob"></div>
+              </div>
+            </div>
+            <span class="mdc-typography--subtitle1">2</span>
+          </div>
         </div>
         <button id="compare" class="mdc-button mdc-button--raised">
           <span
@@ -549,11 +797,7 @@
       <footer class="w-100">
         <div
           role="progressbar"
-          class="
-            mdc-linear-progress
-            mdc-linear-progress--indeterminate
-            mdc-linear-progress--closed
-          "
+          class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed"
           aria-label="Example Progress Bar"
           aria-valuemin="0"
           aria-valuemax="1"
@@ -575,95 +819,283 @@
             <span class="mdc-linear-progress__bar-inner"></span>
           </div>
         </div>
-        <div class="mdc-tab-bar mdc-theme--primary-bg">
-          <div class="mdc-tab-scroller">
-            <div class="mdc-tab-scroller__scroll-area">
-              <div class="mdc-tab-scroller__scroll-content">
-                <button id="back" class="mdc-tab mdc-tab--stacked">
-                  <span class="mdc-tab__content">
-                    <span
-                      class="
-                        mdc-tab__icon
-                        material-icons
-                        mdc-typography--caption
-                        mdc-theme--on-primary
-                      "
-                      aria-hidden="true"
-                      >arrow_back_ios_new</span
-                    >
-                    <span
-                      class="
-                        mdc-tab__text-label
-                        mdc-theme--on-primary
-                        mdc-typography--caption
-                      "
-                      >Back</span
-                    >
+        <div class="w-100 fr f-auto mdc-theme--primary-bg mdc-elevation--z4">
+          <button id="back" class="mdc-tab mdc-tab--stacked">
+            <span class="mdc-tab__content">
+              <span
+                class="mdc-tab__icon material-icons mdc-typography--caption mdc-theme--on-primary"
+                aria-hidden="true"
+                >arrow_back_ios_new</span
+              >
+              <span
+                class="mdc-tab__text-label mdc-theme--on-primary mdc-typography--caption"
+                >Back</span
+              >
+            </span>
+          </button>
+          <div class="mdc-tab">
+            <span class="mdc-tab__content">
+              <div
+                class="mdc-select mdc-select--outlined gone"
+                data-mdc-auto-init="MDCSelect"
+              >
+                <div
+                  class="mdc-select__anchor"
+                  role="button"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="outlined-select-label"
+                >
+                  <span class="mdc-notched-outline">
+                    <span class="mdc-notched-outline__leading"></span>
+                    <span class="mdc-notched-outline__notch">
+                      <span
+                        id="outlined-select-label"
+                        class="mdc-floating-label mdc-theme--on-primary"
+                        >Visualisation</span
+                      >
+                    </span>
+                    <span class="mdc-notched-outline__trailing"></span>
                   </span>
-                </button>
-                <button class="mdc-tab mdc-tab--stacked">
-                  <span class="mdc-tab__content">
+                  <span class="mdc-select__selected-text-container">
                     <span
-                      class="
-                        mdc-tab__icon
-                        material-icons
-                        mdc-typography--caption
-                        mdc-theme--on-primary
-                      "
-                      aria-hidden="true"
-                    ></span>
-                    <span
-                      class="
-                        mdc-tab__text-label
-                        mdc-theme--on-primary
-                        mdc-typography--caption
-                      "
-                    ></span>
-                  </span>
-                </button>
-                <button id="more" class="mdc-tab mdc-tab--stacked">
-                  <span class="mdc-tab__content">
-                    <span
-                      class="
-                        mdc-tab__icon
-                        material-icons
-                        mdc-typography--caption
-                        mdc-theme--on-primary
-                      "
-                      aria-hidden="true"
-                    ></span>
-                    <span
-                      class="
-                        mdc-tab__text-label
-                        mdc-theme--on-primary
-                        mdc-typography--caption
-                      "
+                      id="demo-selected-text"
+                      class="mdc-select__selected-text mdc-theme--on-primary"
                     ></span>
                   </span>
-                  <!-- <span class="mdc-tab__content">
-                    <span
-                      class="
-                        mdc-tab__icon
-                        material-icons
-                        mdc-typography--caption
-                        mdc-theme--on-primary
-                      "
-                      aria-hidden="true"
-                      >more_horiz</span
+                  <span class="mdc-select__dropdown-icon">
+                    <svg
+                      class="mdc-select__dropdown-icon-graphic"
+                      viewBox="7 10 10 5"
+                      focusable="false"
                     >
-                    <span
-                      class="
-                        mdc-tab__text-label
-                        mdc-theme--on-primary
-                        mdc-typography--caption
-                      "
-                      >More</span
+                      <polygon
+                        class="mdc-select__dropdown-icon-active"
+                        stroke="none"
+                        fill-rule="evenodd"
+                        points="7 10 12 15 17 10"
+                      ></polygon>
+                      <polygon
+                        class="mdc-select__dropdown-icon-inactive"
+                        stroke="none"
+                        fill-rule="evenodd"
+                        points="7 15 12 10 17 15"
+                      ></polygon>
+                    </svg>
+                  </span>
+                </div>
+                <div
+                  class="mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth"
+                >
+                  <ul
+                    class="mdc-deprecated-list"
+                    role="listbox"
+                    aria-label="Visualisation picker listbox"
+                  >
+                    <li
+                      class="mdc-deprecated-list-item"
+                      aria-selected="false"
+                      data-value="diff"
+                      role="option"
                     >
-                  </span> -->
-                </button>
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span class="mdc-deprecated-list-item__text">
+                        Difference
+                      </span>
+                    </li>
+                    <li
+                      class="mdc-deprecated-list-item"
+                      aria-selected="false"
+                      data-value="hover"
+                      role="option"
+                    >
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span class="mdc-deprecated-list-item__text">
+                        Hover
+                      </span>
+                    </li>
+                    <li
+                      class="mdc-deprecated-list-item mdc-deprecated-list-item"
+                      aria-selected="false"
+                      data-value="overlay"
+                      role="option"
+                    >
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span class="mdc-deprecated-list-item__text">
+                        Overlay
+                      </span>
+                    </li>
+                    <li
+                      class="mdc-deprecated-list-item"
+                      aria-selected="false"
+                      data-value="slide"
+                      role="option"
+                    >
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span class="mdc-deprecated-list-item__text">
+                        Slide
+                      </span>
+                    </li>
+                    <li
+                      class="mdc-deprecated-list-item mdc-deprecated-list-item--selected"
+                      aria-selected="true"
+                      data-value="toggle"
+                      role="option"
+                    >
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span class="mdc-deprecated-list-item__text">
+                        Toggle
+                      </span>
+                    </li>
+                  </ul>
+                </div>
               </div>
-            </div>
+              <div
+                class="mdc-select mdc-select--filled"
+                data-mdc-auto-init="MDCSelect"
+              >
+                <div
+                  class="mdc-select__anchor"
+                  role="button"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="selected-text"
+                >
+                  <span class="mdc-select__ripple"></span>
+                  <!-- <span
+                    id="select-label"
+                    class="mdc-floating-label mdc-theme--on-primary"
+                    >Visualisation</span
+                  > -->
+                  <span class="mdc-select__selected-text-container">
+                    <span
+                      id="selected-text"
+                      class="mdc-select__selected-text mdc-theme--on-primary mdc-typography--button"
+                      >Toggle</span
+                    >
+                  </span>
+                  <span class="mdc-select__dropdown-icon">
+                    <svg
+                      class="mdc-select__dropdown-icon-graphic"
+                      viewBox="7 10 10 5"
+                      focusable="false"
+                    >
+                      <polygon
+                        class="mdc-select__dropdown-icon-active"
+                        stroke="none"
+                        fill-rule="evenodd"
+                        points="7 10 12 15 17 10"
+                      ></polygon>
+                      <polygon
+                        class="mdc-select__dropdown-icon-inactive"
+                        stroke="none"
+                        fill-rule="evenodd"
+                        points="7 15 12 10 17 15"
+                      ></polygon>
+                    </svg>
+                  </span>
+                  <span class="mdc-line-ripple"></span>
+                </div>
+                <div
+                  class="mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth"
+                >
+                  <ul
+                    class="mdc-deprecated-list"
+                    role="listbox"
+                    aria-label="Visualisation picker listbox"
+                  >
+                    <li
+                      class="mdc-deprecated-list-item"
+                      aria-selected="false"
+                      data-value="diff"
+                      role="option"
+                    >
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span
+                        class="mdc-deprecated-list-item__text mdc-typography--body1"
+                      >
+                        Difference
+                      </span>
+                    </li>
+                    <li
+                      class="mdc-deprecated-list-item"
+                      aria-selected="false"
+                      data-value="hover"
+                      role="option"
+                    >
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span
+                        class="mdc-deprecated-list-item__text mdc-typography--body1"
+                      >
+                        Hover
+                      </span>
+                    </li>
+                    <li
+                      class="mdc-deprecated-list-item mdc-deprecated-list-item"
+                      aria-selected="false"
+                      data-value="overlay"
+                      role="option"
+                    >
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span
+                        class="mdc-deprecated-list-item__text mdc-typography--body1"
+                      >
+                        Overlay
+                      </span>
+                    </li>
+                    <li
+                      class="mdc-deprecated-list-item"
+                      aria-selected="false"
+                      data-value="slide"
+                      role="option"
+                    >
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span
+                        class="mdc-deprecated-list-item__text mdc-typography--body1"
+                      >
+                        Slide
+                      </span>
+                    </li>
+                    <li
+                      class="mdc-deprecated-list-item mdc-deprecated-list-item--selected"
+                      aria-selected="true"
+                      data-value="toggle"
+                      role="option"
+                    >
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span
+                        class="mdc-deprecated-list-item__text mdc-typography--body1"
+                      >
+                        Toggle
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </span>
           </div>
+          <button id="more" class="mdc-tab mdc-tab--stacked">
+            <!-- <span class="mdc-tab__content">
+              <span
+                class="mdc-tab__icon material-icons mdc-typography--caption mdc-theme--on-primary"
+                aria-hidden="true"
+              ></span>
+              <span
+                class="mdc-tab__text-label mdc-theme--on-primary mdc-typography--caption"
+              ></span>
+            </span> -->
+            <span class="mdc-tab__content">
+              <span
+                class="mdc-tab__icon material-icons mdc-typography--caption mdc-theme--on-primary"
+                aria-hidden="true"
+                >info</span
+              >
+              <span
+                class="mdc-tab__text-label mdc-theme--on-primary mdc-typography--caption"
+                >Info</span
+              >
+            </span>
+          </button>
         </div>
       </footer>
     </div>
@@ -674,14 +1106,18 @@
     <script src="js/transform.js"></script>
     <script src="js/main.js"></script>
     <script src="js/viz.js"></script>
+    <script src="js/action.js"></script>
     <script src="js/compare.js"></script>
     <script src="js/samples.js"></script>
     <script>
       const snack_el = document.getElementById("snack");
       const main_el = document.getElementById("main");
       const compare_el = document.getElementById("compare_screen");
+      const action_el = document.getElementById("action");
       const samples_el = document.querySelector("div.samples");
       const result_el = document.querySelector("#result");
+      const canvas_el = result_el.querySelector("canvas");
+      const dialog_el = document.getElementById("info-dialog");
 
       let main, result, compare, samples;
 
@@ -741,8 +1177,9 @@
         window.mdc.autoInit();
         transform.then((Module) => {
           main = new MainView(main_el, snack_el);
-          result = new Visualization(result_el, Module);
-          compare = new Compare(compare_el, result);
+          result = new Visualization(canvas_el, Module);
+          action_bar = new Action(action_el, result);
+          compare = new Compare(compare_el, result, action_bar);
           samples = new Samples(samples_el);
 
           main.c.addEventListener("select_image", (e) => {
@@ -756,6 +1193,10 @@
 
           compare.c.addEventListener("back", () => {
             main.c.scrollIntoView({ behavior: "smooth" });
+          });
+
+          compare.c.addEventListener("more", () => {
+            dialog_el.MDCDialog.open();
           });
 
           samples.c.addEventListener("select_sample", (e) => {
