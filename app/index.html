@@ -318,8 +318,14 @@
         width: 90%;
       }
       #overlay > span {
-        flex: 0 1 auto;
-        margin: 0 0.25em;
+        flex: 0 1 48px;
+        line-height: 0;
+        text-align: center;
+      }
+      #overlay > span > img {
+        max-width: 100%;
+        height: 100%;
+        object-fit: contain;
       }
       #overlay > .mdc-slider {
         flex: 1 0 auto;
@@ -782,7 +788,12 @@
             </span>
           </div>
           <div id="overlay" class="fr f-center hide">
-            <span class="mdc-typography--subtitle1">1</span>
+            <span
+              ><img
+                src="images/logo/image-compare-1.svg"
+                alt="1"
+                title="Image 1"
+            /></span>
             <div class="mdc-slider" data-mdc-auto-init="MDCSlider">
               <input
                 class="mdc-slider__input"
@@ -803,7 +814,12 @@
                 <div class="mdc-slider__thumb-knob"></div>
               </div>
             </div>
-            <span class="mdc-typography--subtitle1">2</span>
+            <span
+              ><img
+                src="images/logo/image-compare-2.svg"
+                alt="2"
+                title="Image 2"
+            /></span>
           </div>
         </div>
         <button id="compare" class="mdc-button mdc-button--raised">
