@@ -23,6 +23,7 @@ const staticAssets = [
     './images/usecases/music/case5-music-sheet-2.jpg',
     './images/usecases/satellite/Original-Tokyo-2017.jpg',
     './images/usecases/satellite/Original-Tokyo-1986.jpg',
+    './js/action.js',
     './js/compare.js',
     './js/main.js',
     './js/samples.js',
