@@ -77,7 +77,45 @@
       }
       .mdc-tab {
         --mdc-typography-caption-text-transform: none;
+        --mdc-typography-body1-text-transform: none;
       }
+
+      .mdc-select {
+        pointer-events: auto;
+        width: max(128px, min(256px, 40vw));
+      }
+
+      /* Info dialog */
+      .mdc-dialog .mdc-dialog__close {
+        align-self: flex-end;
+      }
+
+      .mdc-select--filled:not(.mdc-select--disabled) .mdc-select__anchor {
+        background-color: var(--mdc-theme-primary, #6200ee);
+      }
+      .mdc-select--filled:not(.mdc-select--disabled) .mdc-line-ripple::before,
+      .mdc-select--filled:not(.mdc-select--disabled):hover
+        .mdc-line-ripple::before,
+      .mdc-select--filled:not(.mdc-select--disabled) .mdc-line-ripple::after,
+      .mdc-select--filled:not(.mdc-select--disabled):hover
+        .mdc-line-ripple::after {
+        border-bottom-color: var(--mdc-theme-on-primary, #fff);
+      }
+
+      .mdc-select--outlined:not(.mdc-select--disabled)
+        .mdc-notched-outline__leading,
+      .mdc-select--outlined:not(.mdc-select--disabled)
+        .mdc-notched-outline__notch,
+      .mdc-select--outlined:not(.mdc-select--disabled)
+        .mdc-notched-outline__trailing {
+        border-color: var(--mdc-theme-on-primary, "rgba(0, 0, 0, 0.38)");
+      }
+      .mdc-select:not(.mdc-select--disabled) .mdc-select__dropdown-icon,
+      .mdc-select:not(.mdc-select--disabled).mdc-select--focused
+        .mdc-select__dropdown-icon {
+        fill: var(--mdc-theme-on-primary, #fff);
+      }
+
       body {
         margin: 0;
         padding: 0;
@@ -106,6 +144,10 @@
         justify-content: center;
       }
 
+      .f-auto > * {
+        flex: 1 1 auto;
+        margin: 0.5em;
+      }
       .f-spaced > * {
         flex: 0 0 auto;
         margin: 0.5em auto;
@@ -143,6 +185,10 @@
 
       .ty-100 {
         transform: translate3d(0, -100%, 0);
+      }
+
+      .text-center {
+        text-align: center;
       }
 
       #main {
@@ -209,7 +255,7 @@
         display: grid;
         min-height: 0;
         max-height: 100%;
-        grid-template-rows: 20vh 1fr auto;
+        grid-template-rows: 20vh minmax(0, 1fr) auto;
         grid-template-columns: 100vw 100vw;
       }
       #compare_container > .vertical-image-list {
@@ -233,23 +279,88 @@
         position: relative;
       }
 
-      #compare_container > div.action {
+      #action {
         grid-area: 3 / 2 / 4 / 3;
-        margin: auto auto 1.5em auto;
+        margin: auto;
+        display: grid;
+        grid-template-columns: auto;
+        grid-template-rows: auto;
       }
+      #action > * {
+        grid-area: 1 / 1;
+        place-self: center center;
+      }
+      #toggle {
+        width: auto;
+      }
+      #overlay {
+        min-width: 256px;
+        width: 90%;
+      }
+      #overlay > span {
+        flex: 0 1 auto;
+        margin: 0 0.25em;
+      }
+      #overlay > .mdc-slider {
+        flex: 1 0 auto;
+      }
+
       #compare {
         grid-area: 3 / 1 / 4 / 2;
         margin: auto auto 1.5em auto;
       }
 
+      div.result_container {
+        grid-area: 2 / 2;
+        position: relative;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
       #result {
-        grid-area: 2 / 2 / 3 / 3;
-        padding: 0 0.25em 0.5em 0.25em;
-        place-self: center center;
         min-height: 0;
+        width: fit-content;
+        flex: 0 1 auto;
+        position: relative;
+      }
+      #result > canvas {
+        padding: 0.25em;
+        max-width: 100%;
+        height: 100%;
       }
 
-      #compare_container > div.action > .mdc-tab-bar .mdc-tab {
+      #result > div.image_slider {
+        width: calc(100% - 0.5em);
+        height: 2px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: var(--mdc-theme-primary, #6200ee);
+        cursor: pointer;
+        z-index: 1;
+      }
+      #result > div.image_slider.horizontal {
+        width: 2px;
+        height: calc(100% - 0.5em);
+      }
+      #result > div.image_slider::after {
+        content: "";
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: var(--mdc-theme-primary, #6200ee);
+        cursor: pointer;
+        z-index: 1;
+      }
+
+      #action > .mdc-tab-bar .mdc-tab {
         height: 36px;
       }
 
@@ -549,10 +660,14 @@
             />
           </li>
         </ul>
+        <div class="result_container">
+          <div id="result">
+            <div class="image_slider hide horizontal"></div>
+            <canvas> </canvas>
+          </div>
+        </div>
 
-        <canvas id="result" class="mw-100 mh-100"> </canvas>
-
-        <div class="action">
+        <div id="action">
           <div id="toggle" class="mdc-tab-bar mdc-elevation--z4">
             <div class="mdc-tab-scroller">
               <div class="mdc-tab-scroller__scroll-area">
@@ -584,6 +699,101 @@
                 </div>
               </div>
             </div>
+          </div>
+          <div id="slide" class="fr f-auto hide">
+            <div class="mdc-form-field" data-mdc-auto-init="MDCFormField">
+              <div
+                class="mdc-radio mdc-radio--touch"
+                data-mdc-auto-init="MDCRadio"
+              >
+                <input
+                  class="mdc-radio__native-control"
+                  type="radio"
+                  id="radio-horizontal"
+                  name="radio-slider"
+                  value="horizontal"
+                  checked
+                />
+                <div class="mdc-radio__background">
+                  <div class="mdc-radio__outer-circle"></div>
+                  <div class="mdc-radio__inner-circle"></div>
+                </div>
+                <div class="mdc-radio__ripple"></div>
+              </div>
+              <label for="radio-horizontal">Horizontal</label>
+            </div>
+            <div class="mdc-form-field" data-mdc-auto-init="MDCFormField">
+              <div
+                class="mdc-radio mdc-radio--touch"
+                data-mdc-auto-init="MDCRadio"
+              >
+                <input
+                  class="mdc-radio__native-control"
+                  type="radio"
+                  id="radio-vertical"
+                  name="radio-slider"
+                  value="vertical"
+                />
+                <div class="mdc-radio__background">
+                  <div class="mdc-radio__outer-circle"></div>
+                  <div class="mdc-radio__inner-circle"></div>
+                </div>
+                <div class="mdc-radio__ripple"></div>
+              </div>
+              <label for="radio-vertical">Vertical</label>
+            </div>
+          </div>
+          <div id="diff" class="hide">
+            <button
+              class="mdc-button mdc-button--touch mdc-button--icon-leading mdc-button--outlined"
+            >
+              <span
+                class="mdc-button__ripple"
+                data-mdc-auto-init="MDCRipple"
+              ></span>
+              <span class="mdc-button__touch"></span>
+              <i class="material-icons mdc-button__icon" aria-hidden="true"
+                >download</i
+              >
+              <span class="mdc-button__label">Download</span>
+            </button>
+          </div>
+          <div id="hover" class="hide fc f-center">
+            <span class="mdc-typography--subtitle1"
+              >Showing image: <span id="hover-image">1</span></span
+            >
+            <span
+              class="text-center mdc-typography--caption mdc-theme--text-hint-on-background"
+            >
+              <em
+                >Move finger / mouse over the result to toggle manually between
+                the images.</em
+              >
+            </span>
+          </div>
+          <div id="overlay" class="fr f-center hide">
+            <span class="mdc-typography--subtitle1">1</span>
+            <div class="mdc-slider" data-mdc-auto-init="MDCSlider">
+              <input
+                class="mdc-slider__input"
+                type="range"
+                min="0"
+                max="100"
+                value="50"
+                name="overlay"
+                aria-label="Image overlay slider"
+              />
+              <div class="mdc-slider__track">
+                <div class="mdc-slider__track--inactive"></div>
+                <div class="mdc-slider__track--active">
+                  <div class="mdc-slider__track--active_fill"></div>
+                </div>
+              </div>
+              <div class="mdc-slider__thumb">
+                <div class="mdc-slider__thumb-knob"></div>
+              </div>
+            </div>
+            <span class="mdc-typography--subtitle1">2</span>
           </div>
         </div>
         <button id="compare" class="mdc-button mdc-button--raised">
