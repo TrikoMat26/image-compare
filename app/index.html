@@ -343,17 +343,17 @@
 
       #result > div.image_slider {
         width: calc(100% - 0.5em);
-        height: 2px;
+        height: 4px;
         position: absolute;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
-        background-color: var(--mdc-theme-primary, #6200ee);
+        background-color: var(--mdc-theme-primary, #000);
         cursor: pointer;
         z-index: 1;
       }
       #result > div.image_slider.horizontal {
-        width: 2px;
+        width: 4px;
         height: calc(100% - 0.5em);
       }
       #result > div.image_slider::after {
@@ -365,7 +365,8 @@
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
-        background-color: var(--mdc-theme-primary, #6200ee);
+        border: 4px solid var(--mdc-theme-primary, #000);
+        background-color: #fff;
         cursor: pointer;
         z-index: 1;
       }
