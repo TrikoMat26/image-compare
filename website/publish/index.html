@@ -13,6 +13,7 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <style>
       body { font-family:Roboto, Helvetica, Verdana, Sans; margin:1em 0; padding:0; color:black; width:100%; }
+      blockquote { text-align:center; font-size:1.4em; font-style:italic; }
       .c { display:grid; grid-template-rows:3em 1fr; grid-template-columns:1fr 1fr 1fr; max-width:1200px; grid-row-gap:6em; margin:0 auto; }
       .c .logo { display:inline-block; }
       .c .nav { grid-column-start:2; grid-column-end:4; align-self:center; justify-self:end; }
@@ -35,6 +36,11 @@
       .c > .features > .feature_i > img { height:2em; }
       .c > .features > .feature_i > h4 { font-size:1.2em; font-weight:bold; line-height:120%; margin-top:0.4em; }
       .c > .features > .feature_i > p { font-size:0.9em; }
+
+      .c > .installguide { display:grid; grid-column-start:1; grid-column-end:4;grid-template-columns:2; grid-template-rows:2; text-align:center; grid-column-gap:2em; max-width:1000px; justify-self:center; align-self:center; }
+      .c > .installguide > .title { grid-row-start:1; grid-row-end:2; grid-column-start:1; grid-column-end:3; font-size:3em; font-weight:bold; }
+      .c > .installguide > img { max-height:40em; margin:2em 0; }
+      .c > .installguide > p { grid-column-start:1; grid-column-end:3; font-size:0.8em; }
 
       .usecases_c { display:block; background-color: #6666ff; color:white; margin:2em 0; padding-bottom:4em; min-height:40vh; }
       .usecases_c > .usecases { display:grid; max-width:1000px; grid-template-rows:2; grid-template-column:1; margin:0 auto; }
@@ -65,7 +71,9 @@
       .about_c > .about > .centered_desc { grid-column-start:1; grid-column-end:4; font-size:1em; line-height:130%; justify-self:center; }
       .about_c > .about > .grant_info { grid-column-start:1; grid-column-end:4; font-size:1em; line-height:130%; justify-self:left; }
       .about_c > .about > figure img { border-radius:50%; height:128px; }
-      
+
+      .text_button { display:inline; color:blue; text-decoration:underline; margin-left:1em; }
+      .text_button:hover { cursor:pointer; }
       @media (max-width:600px) { /* for mobile phones */
           body { width:100%; }
           .c { grid-row-gap:4em; }
@@ -86,7 +94,7 @@
           .c > .features > .feature_i > p { margin:0; }
 
           .about_c { }
-          .about_c > .about {max-width:90vw; }
+          .about_c > .about { max-width:90vw; }
           .about_c > .about > figure { margin:0; padding:0; }
           .about_c > .about > figure img { border-radius:50%; height:64px; }
           .about_c > .about > figure figcaption { }
@@ -136,6 +144,11 @@
           }
         }
       }
+
+      function toggle_install_guide() {
+        var c = document.getElementById('how_to_install');
+        c.classList.toggle('hide');
+      }
     </script>
   </head>
   <body>
@@ -164,7 +177,16 @@
         </div>
         <div class="download">
           <a class="button" href="app/latest/">Try It Before Installing</a>
+          <div class="text_button" onclick="toggle_install_guide()" title="Toggle Installation Guide">Installation Guide</div>
         </div>
+      </div>
+
+      <div id="how_to_install" class="installguide hide">
+        <div class="title">Installation Guide</div>
+        <img src="res/install-guide/install-guide-1.png">
+        <img src="res/install-guide/install-guide-2.png">
+
+        <p>Note: Image compare application has been tested to work only in Mozilla Firefox and Google Chrome web browsers in desktop and mobile platforms.</p> 
       </div>
 
       <div id="features" class="features">
@@ -212,17 +234,17 @@
           <button data-id="3" onclick="on_usecase_select(this)">Photographs</button>
           <button data-id="4" onclick="on_usecase_select(this)">Satellite</button>
           <button data-id="5" onclick="on_usecase_select(this)">Music</button>
+          <button data-id="6" onclick="on_usecase_select(this)">Puzzle</button>
         </div>
         <div id="use-case-1" class="case">
           <h4>Art Restoration</h4>
           <figure class="original">
-            <img src="res/usecases/case1-Ghent-Altarpiece.jpg">
-            <figcaption>The original (left) Ghent Altarpiece art work has
-              recently been restored (right). <br/>[Source: <a href="https://www.codart.nl/art-works/first-phase-of-ghent-altarpiece-restoration-has-been-completed/">Codart</a> via Giles Bergel] </figcaption>
+            <img src="res/usecases/case1-doge-giovanni.jpg">
+            <figcaption>The original (left) Portrait of Doge Giovanni Mocenigo and the restored version of this painting (right). <br/>[Source: <a href="https://commons.wikimedia.org/wiki/Restoration_of_paintings#Gentile_Bellini,_Portrait_of_Doge_Giovanni_Mocenigo">Restoration of paintings</a> at Wikimedia] </figcaption>
           </figure>
           <figure class="compare hide">
-            <img loading="lazy" src="res/usecases/case1-Ghent-Altarpiece-compare.gif">
-            <figcaption>Using the Image Compare application, we can align the photograph of Ghent Altarpiece art work taken before and after the restoration. These aligned images are shown above in the form of toggle visualisation available in the Image Compare application.</figcaption>
+            <img loading="lazy" src="res/usecases/case1-doge-giovanni-compare.gif">
+            <figcaption>Using the Image Compare application, we can align the portrait of Doge Giovanni Mocenigo art work taken before and after the restoration. These aligned images are shown above in the form of toggle visualisation available in the Image Compare application.</figcaption>
           </figure>
 
           <p class="type_of_figure_selector">
@@ -235,18 +257,19 @@
           <p>Physical damage or natural degradation of a painting can be
             tracked using the Image Compare application. It can also be used
             to see the changes introduced by an art restoration procedure
-            as depicted by the Ghent Altarpiece art restoration example shown above.</p>
+            as depicted by the <a href="https://commons.wikimedia.org/wiki/Restoration_of_paintings#Gentile_Bellini,_Portrait_of_Doge_Giovanni_Mocenigo">portrait of Doge Giovanni Mocenigo</a> art
+            restoration example shown above.</p>
         </div>
 
         <div id="use-case-2" class="case hide">
           <h4>Digital Collation</h4>
 
           <figure class="original">
-            <img src="res/usecases/case2-Traherne-Book-Pages.jpg">
+            <img src="res/usecases/case2-Traherne-Book-Pages-2.jpg">
             <figcaption>Page from one edition of an early printed book (left) and the same page from a different edition of the book (right) <br/>[Source:  Julia Smith, General Editor, <a target="_blank" href="https://oxfordtraherne.org/traherne-digital-collator/">The Oxford Traherne</a>]</figcaption>
           </figure>
           <figure class="compare hide">
-            <img loading="lazy" src="res/usecases/case2-traherne-compare.gif">
+            <img loading="lazy" src="res/usecases/case2-traherne-compare-2.gif">
             <figcaption>Using the Image Compare application, we can align the photograph (or scan) or the book pages from two different editions of the same book. Toggling visualisation (as shown above) of such aligned book pages allows us to quickly spot the differences in text between the two editions.</figcaption>
           </figure>
 
@@ -264,6 +287,8 @@
             by creating visualisations that allows book historians to easily identify
             differences in text of early printed books. This method of digital collation
             is already being used by a large number of scholarly editing projects all over the world.</p>
+
+          <blockquote>The collation of early modern texts therefore has been revolutionized by the <a href="https://www.robots.ox.ac.uk/~vgg/software/traherne/">Traherne Digital Collator</a> [predecessor of Image Compare application]  which is incomparably easier and faster to use, and enables more detail and sophisticated textual analysis than has previously been possible. It is now being used not only by the Oxford Traherne project, but by a variety of prestigious scholarly editing projects across the world." -- Julia Smith, General Editor, <a target="_blank" href="https://oxfordtraherne.org/traherne-digital-collator/">The Oxford Traherne</a></blockquote>
         </div>
 
         <div id="use-case-3" class="case hide">
@@ -315,11 +340,11 @@
         </div>
 
         <div id="use-case-5" class="case hide">
-          <h4>Music Sheets</h4>
+          <h4>Music Notation</h4>
 
           <figure class="original">
             <img src="res/usecases/case5-music-sheet.jpg">
-            <figcaption>Music sheets from different editions of the same book from one edition of a book (left) and the same music sheet from a different edition of the book. <br/>[Source: Brad Cohen]</figcaption>
+            <figcaption>A page of the vocal score of Puccini's La Bohème, published by Ricordi in separate years. Using the same engraving plate, the publisher made emendations and changes between these two publications. Divergences, for instance in the number of bars in the bottom system of the page, are clear to see in Image Compare. [Source: PerformingEditions.com via Brad Cohen]</figcaption>
           </figure>
           <figure class="compare hide">
             <img loading="lazy" src="res/usecases/case5-music-compare.gif">
@@ -333,8 +358,31 @@
             <label for="original">Show Compare Visualisation</label>
           </p>
 
-          <p>The Image Compare application can also be use to compare musical notations in music sheets taken from different editions of a book.</p>
+          <blockquote>"The Image Compare application is a powerful tool for comparison of music engravings taken from the same original engraving plates." -- Brad Cohen</blockquote>
         </div>
+
+        <div id="use-case-6" class="case hide">
+          <h4>Spot the Difference Puzzle</h4>
+
+          <figure class="original">
+            <img src="res/usecases/case6-puzzle-1.jpg">
+            <figcaption>Spot the difference type puzzles can be solved or its solution can be verified easily using the Image Compare application. [Source: <a href="https://commons.wikimedia.org/wiki/File:Spot_the_difference.png">Wikimedia</a>]</figcaption>
+          </figure>
+          <figure class="compare hide">
+            <img loading="lazy" src="res/usecases/case6-puzzle-1.gif">
+            <figcaption>Image Compare can align the two images in a spot the difference puzzle and toggle between the two images to help easily spot the difference (shown above).</figcaption>
+          </figure>
+
+          <p class="type_of_figure_selector">
+            <input value="original" type="radio" name="type_of_figure" checked onchange="onchange_type_of_figure_selector(this)">
+            <label for="original">Show Original Images</label>
+            <input value="compare" type="radio" name="type_of_figure" onchange="onchange_type_of_figure_selector(this)">
+            <label for="original">Show Compare Visualisation</label>
+          </p>
+
+          <p style="text-align:center;">Solve puzzles like a pro &#128526;.</p>
+        </div>
+
       </div>
     </div>
 
