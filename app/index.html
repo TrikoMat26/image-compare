@@ -96,6 +96,21 @@
       .mdc-dialog .mdc-dialog__close {
         align-self: flex-end;
       }
+      .mdc-dialog .mdc-dialog__content {
+        padding-top: 0;
+      }
+      #info-dialog-title {
+        margin-top: 0;
+      }
+      .info-dialog__content--section {
+        margin: 0 0 1rem 0;
+      }
+      .info-dialog__content--section > p {
+        margin-top: 0;
+      }
+      .info-dialog__content--section > p:first-child {
+        margin: 0;
+      }
 
       /* Select dropdown colours */
       .mdc-select {
@@ -433,7 +448,7 @@
       </div>
     </aside>
     <div
-      class="mdc-dialog mdc-dialog--sheet mdc-dialog--no-content-padding"
+      class="mdc-dialog mdc-dialog--sheet"
       aria-modal="true"
       aria-labelledby="info-dialog-title"
       aria-describedby="info-dialog-content"
@@ -443,38 +458,74 @@
       <div class="mdc-dialog__scrim" data-mdc-dialog-action="cancel"></div>
       <div class="mdc-dialog__container">
         <div class="mdc-dialog__surface">
+          <button
+            class="mdc-icon-button material-icons mdc-dialog__close"
+            data-mdc-dialog-action="close"
+          >
+            close
+          </button>
           <div class="mdc-dialog__content">
             <div class="info-dialog">
               <h3
-                tabindex="0"
                 id="info-dialog-title"
                 class="info-dialog__title mdc-typography--headline5"
               >
                 Image Compare
               </h3>
               <div id="info-dialog-content" class="info-dialog__content">
-                <p class="mdc-typography--subtitle1">
-                  App Version
-                  <br />
-                  <span
-                    class="mdc-typography--caption mdc-theme--text-secondary-on-background"
-                    >v0.2.0</span
-                  >
-                </p>
-                <p class="mdc-typography--subtitle1">
-                  Homepage
-                  <br />
-                  <a
-                    href="https://www.robots.ox.ac.uk/~vgg/software/image-compare/"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    <span
-                      class="mdc-typography--caption mdc-theme--text-secondary-on-background"
-                      >Link</span
-                    ></a
-                  >
-                </p>
+                <div
+                  class="info-dialog__content--section mdc-typography--caption mdc-theme--text-secondary-on-background"
+                >
+                  <p class="mdc-typography--subtitle1">Version</p>
+                  <p>0.2.0 (Jan 22, 2022)</p>
+                </div>
+                <div
+                  class="info-dialog__content--section mdc-typography--caption mdc-theme--text-secondary-on-background"
+                >
+                  <p class="mdc-typography--subtitle1">About</p>
+                  <p>
+                    A lightweight, standalone and offline application to
+                    highlight the differences between a pair of images.
+                  </p>
+                  <p>
+                    Developed &amp; Maintained by
+                    <a
+                      href="https://www.robots.ox.ac.uk/~vgg/"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      VGG, Oxford</a
+                    >
+                  </p>
+                  <p>
+                    For more details see
+                    <br />
+                    <a
+                      href="https://www.robots.ox.ac.uk/~vgg/software/image-compare/"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      https://www.robots.ox.ac.uk/~vgg/software/image-compare/</a
+                    >
+                  </p>
+                </div>
+                <div
+                  class="info-dialog__content--section mdc-typography--caption mdc-theme--text-secondary-on-background"
+                >
+                  <p class="mdc-typography--subtitle1">Support / Feedback</p>
+                  <p>
+                    If you would like to provide <b>feedback</b>, request for a
+                    <b>feature</b>, or report a <b>bug</b>, please submit it in
+                    our
+                    <a
+                      href="https://gitlab.com/vgg/image-compare/-/issues"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      issues portal</a
+                    >.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
