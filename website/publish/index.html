@@ -37,10 +37,11 @@
       .c > .features > .feature_i > h4 { font-size:1.2em; font-weight:bold; line-height:120%; margin-top:0.4em; }
       .c > .features > .feature_i > p { font-size:0.9em; }
 
-      .c > .installguide { display:grid; grid-column-start:1; grid-column-end:4;grid-template-columns:2; grid-template-rows:2; text-align:center; grid-column-gap:2em; max-width:1000px; justify-self:center; align-self:center; }
+      .c > .installguide { display:grid; grid-column-start:1; grid-column-end:4;grid-template-columns:2; grid-template-rows:2; text-align:center; grid-column-gap:0em; max-width:1000px; justify-self:center; align-self:center; }
       .c > .installguide > .title { grid-row-start:1; grid-row-end:2; grid-column-start:1; grid-column-end:3; font-size:3em; font-weight:bold; }
-      .c > .installguide > img { max-height:40em; margin:2em 0; }
-      .c > .installguide > p { grid-column-start:1; grid-column-end:3; font-size:0.8em; }
+      .c > .installguide > .steps { grid-row-start:2; grid-row-end:3; grid-column-start:1; grid-column-end:3; }
+      .c > .installguide > .steps > img { max-height:30em; margin:2em 1em; }
+      .c > .installguide > p { grid-column-start:1; grid-column-end:3; font-size:0.8em; padding:0 1em; }
 
       .usecases_c { display:block; background-color: #6666ff; color:white; margin:2em 0; padding-bottom:4em; min-height:40vh; }
       .usecases_c > .usecases { display:grid; max-width:1000px; grid-template-rows:2; grid-template-column:1; margin:0 auto; }
@@ -183,8 +184,10 @@
 
       <div id="how_to_install" class="installguide hide">
         <div class="title">Installation Guide</div>
-        <img src="res/install-guide/install-guide-1.png">
-        <img src="res/install-guide/install-guide-2.png">
+        <div class="steps">
+          <img title="Click 3 dots menu button in web browser's address toolbar." src="res/install-guide/install-guide-1.png">
+          <img title="Click 'Install app' menu item to add Image Compare application in home screen." src="res/install-guide/install-guide-2.png">
+        </div>
 
         <p>Note: Image compare application has been tested to work only in Mozilla Firefox and Google Chrome web browsers in desktop and mobile platforms.</p> 
       </div>
