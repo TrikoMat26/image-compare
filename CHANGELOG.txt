@@ -2,7 +2,12 @@
 - Advanced mode to allow users to choose the transformation (identity, similarity, affine, thin plate spline)
 - Photometric transform
 - Support landscape view mode
-- More visualisation method (slider, hover, difference, fade)
+
+## [0.2.0] - 2022-01-28
+- new visualisations: toggle, slider, overlay, hover, difference
+- new usecases (spot the difference) and updates to existing usecases (painting, book)
+- installation guide added to website
+- google analytics to record software usage
 
 ## [0.1.0] - 2021-11-19
 - 5 sample use cases (book, painting, photograph, satellite, music)
