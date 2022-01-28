@@ -3,9 +3,10 @@
 // https://vaadin.com/learn/tutorials/learn-pwa/turn-website-into-a-pwa
 // https://github.com/jakearchibald/wittr/blob/cache-avatars/public/js/sw/index.js
 // Cache
-const CACHE_NAME = "imcomp-mdc-pwa-v3";
+const CACHE_NAME = "imcomp-mdc-pwa-v2";
 const staticAssets = [
     './',
+    './favicon.ico',
     './manifest.json',
     './index.html',
     './images/icons/imcomp-512x512.png',
