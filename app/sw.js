@@ -67,7 +67,7 @@ self.addEventListener('activate', (e) => {
 async function cacheFirst(req) {
     try {
         const cachedResponse = await caches.match(req);
-        return cachedResponse;
+        return cachedResponse || fetch(req);
     } catch(_e) {
         return fetch(req);
     }
