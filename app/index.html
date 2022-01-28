@@ -9,7 +9,48 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="theme-color" content="#ffffff" />
-    <title>VGG Image compare</title>
+    <title>Image Compare 0.2.0</title>
+    <meta
+      name="description"
+      content="Image Compare is a lightweight, standalone and offline application to visually compare a pair of images and highlight their differences. This application can be used in desktop computers and mobile phones without requiring installation as it runs entires in a web browser. Image Compare is an open source software developed and maintained by the VGG Oxford."
+    />
+    <meta
+      property="og:url"
+      content="https://robots.ox.ac.uk/~vgg/software/image-compare/app/latest/"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Image Compare" />
+    <meta
+      property="og:description"
+      content="Image Compare is a lightweight, standalone and offline application to visually compare a pair of images and highlight their differences. This application can be used in desktop computers and mobile phones without requiring installation as it runs entires in a web browser. Image Compare is an open source software developed and maintained by the VGG Oxford."
+    />
+    <meta
+      property="og:image"
+      content="https://robots.ox.ac.uk/~vgg/software/image-compare/res/logo/image-compare-logo.png"
+    />
+
+    <!--
+        Development of Image Compare is supported by the EPSRC programme grant
+        Visual AI: An Open World Interpretable Visual Transformer (UKRI Grant EP/T028572/1)
+        Using Google Analytics, we record the usage of this application.
+        This data is used in reporting of this programme grant.
+
+        If you do not wish to share this data, you can safely remove the
+        javascript code below.
+      -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-T47X77WPWN"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-T47X77WPWN");
+    </script>
+    <link rel="shortcut icon" href="favicon.ico" />
     <link rel="apple-touch-icon" href="./images/icons/imcomp-192x192.png" />
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
     <link rel="preconnect" href="https://unpkg.com/" crossorigin />
@@ -485,8 +526,9 @@
                 >
                   <p class="mdc-typography--subtitle1">About</p>
                   <p>
-                    A lightweight, standalone and offline application to
-                    highlight the differences between a pair of images.
+                    Image Compare is a lightweight, standalone and offline
+                    application to highlight the differences between a pair of
+                    images.
                   </p>
                   <p>
                     Developed &amp; Maintained by
