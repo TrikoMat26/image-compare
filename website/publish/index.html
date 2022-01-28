@@ -250,36 +250,34 @@
       <div class="usecases">
         <div class="title">Use Cases</div>
         <div class="btngroup">
-          <button data-id="1" onclick="on_usecase_select(this)" class="active">Painting</button>
+          <button data-id="1" onclick="on_usecase_select(this)" class="active">Photographs</button>
           <button data-id="2" onclick="on_usecase_select(this)">Book</button>
-          <button data-id="3" onclick="on_usecase_select(this)">Photographs</button>
+          <button data-id="3" onclick="on_usecase_select(this)">Painting</button>
           <button data-id="4" onclick="on_usecase_select(this)">Satellite</button>
           <button data-id="5" onclick="on_usecase_select(this)">Music</button>
           <button data-id="6" onclick="on_usecase_select(this)">Puzzle</button>
         </div>
         <div id="use-case-1" class="case">
-          <h4>Art Restoration</h4>
+          <h4>Forged Photograph</h4>
+
           <figure class="original">
-            <img src="res/usecases/case1-doge-giovanni.jpg">
-            <figcaption>The original (left) Portrait of Doge Giovanni Mocenigo and the restored version of this painting (right). <br/>[Source: <a href="https://commons.wikimedia.org/wiki/Restoration_of_paintings#Gentile_Bellini,_Portrait_of_Doge_Giovanni_Mocenigo">Restoration of paintings</a> at Wikimedia] </figcaption>
+            <img src="res/usecases/case3-churchill-cigar-forgery.jpg">
+            <figcaption>Original Photograph (left) and forged version (right) <br/>[Source: <a href="https://www.dailymail.co.uk/news/article-1286620/Churchill-non-smoker-How-todays-PC-censors-airbrushed-cigar.html">Daily Mail</a>]</figcaption>
           </figure>
           <figure class="compare hide">
-            <img loading="lazy" src="res/usecases/case1-doge-giovanni-compare.gif">
-            <figcaption>Using the Image Compare application, we can align the portrait of Doge Giovanni Mocenigo art work taken before and after the restoration. These aligned images are shown above in the form of toggle visualisation available in the Image Compare application.</figcaption>
+            <img loading="lazy" src="res/usecases/case3-churchill-compare.gif">
+            <figcaption>Using the Image Compare application, we can align the two photographs and identify the forged regions using the toggle visualisation (shown above).</figcaption>
           </figure>
 
           <p class="type_of_figure_selector">
-            <input value="original" type="radio" name="type_of_figure" onchange="onchange_type_of_figure_selector(this)" checked>
+            <input value="original" type="radio" name="type_of_figure" checked onchange="onchange_type_of_figure_selector(this)">
             <label for="original">Show Original Images</label>
             <input value="compare" type="radio" name="type_of_figure" onchange="onchange_type_of_figure_selector(this)">
-            <label for="compare">Show Compare Visualisation</label>
+            <label for="original">Show Compare Visualisation</label>
           </p>
 
-          <p>Physical damage or natural degradation of a painting can be
-            tracked using the Image Compare application. It can also be used
-            to see the changes introduced by an art restoration procedure
-            as depicted by the <a href="https://commons.wikimedia.org/wiki/Restoration_of_paintings#Gentile_Bellini,_Portrait_of_Doge_Giovanni_Mocenigo">portrait of Doge Giovanni Mocenigo</a> art
-            restoration example shown above.</p>
+          <p>Image compare application can be used to highlight forgery in
+            photographs.</p>
         </div>
 
         <div id="use-case-2" class="case hide">
@@ -313,26 +311,28 @@
         </div>
 
         <div id="use-case-3" class="case hide">
-          <h4>Forged Photograph</h4>
-
+          <h4>Art Restoration</h4>
           <figure class="original">
-            <img src="res/usecases/case3-churchill-cigar-forgery.jpg">
-            <figcaption>Original Photograph (left) and forged version (right) <br/>[Source: <a href="https://www.dailymail.co.uk/news/article-1286620/Churchill-non-smoker-How-todays-PC-censors-airbrushed-cigar.html">Daily Mail</a>]</figcaption>
+            <img src="res/usecases/case1-doge-giovanni.jpg">
+            <figcaption>The original (left) Portrait of Doge Giovanni Mocenigo and the restored version of this painting (right). <br/>[Source: <a href="https://commons.wikimedia.org/wiki/Restoration_of_paintings#Gentile_Bellini,_Portrait_of_Doge_Giovanni_Mocenigo">Restoration of paintings</a> at Wikimedia] </figcaption>
           </figure>
           <figure class="compare hide">
-            <img loading="lazy" src="res/usecases/case3-churchill-compare.gif">
-            <figcaption>Using the Image Compare application, we can align the two photographs and identify the forged regions using the toggle visualisation (shown above).</figcaption>
+            <img loading="lazy" src="res/usecases/case1-doge-giovanni-compare.gif">
+            <figcaption>Using the Image Compare application, we can align the portrait of Doge Giovanni Mocenigo art work taken before and after the restoration. These aligned images are shown above in the form of toggle visualisation available in the Image Compare application.</figcaption>
           </figure>
 
           <p class="type_of_figure_selector">
-            <input value="original" type="radio" name="type_of_figure" checked onchange="onchange_type_of_figure_selector(this)">
+            <input value="original" type="radio" name="type_of_figure" onchange="onchange_type_of_figure_selector(this)" checked>
             <label for="original">Show Original Images</label>
             <input value="compare" type="radio" name="type_of_figure" onchange="onchange_type_of_figure_selector(this)">
-            <label for="original">Show Compare Visualisation</label>
+            <label for="compare">Show Compare Visualisation</label>
           </p>
 
-          <p>Image compare application can be used to highlight forgery in
-            photographs.</p>
+          <p>Physical damage or natural degradation of a painting can be
+            tracked using the Image Compare application. It can also be used
+            to see the changes introduced by an art restoration procedure
+            as depicted by the <a href="https://commons.wikimedia.org/wiki/Restoration_of_paintings#Gentile_Bellini,_Portrait_of_Doge_Giovanni_Mocenigo">portrait of Doge Giovanni Mocenigo</a> art
+            restoration example shown above.</p>
         </div>
 
         <div id="use-case-4" class="case hide">
