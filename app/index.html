@@ -348,9 +348,19 @@
         margin: 0;
       }
       #compare_container > .vertical-image-list > li {
-        border: 1px solid #ccc;
+        background-color: #f7f7f7;
         border-radius: 1em;
         position: relative;
+        overflow: hidden;
+      }
+      #compare_container > .vertical-image-list > li > span {
+        position: absolute;
+        border-radius: 50%;
+        bottom: 0;
+        right: 0;
+        margin-right: 0.25em;
+        margin-bottom: 0.25em;
+        background-color: #f7f7f7;
       }
 
       #action {
@@ -449,14 +459,11 @@
 
       img.mdc-image-list__image {
         max-height: 100%;
-        max-width: 100%;
-        object-fit: contain;
         width: auto;
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        padding: 0.25em;
       }
       img.mdc-list-item__graphic {
         height: min(max(32px, 20vmin), 128px);
@@ -484,7 +491,7 @@
         aria-relevant="additions"
       >
         <div class="mdc-snackbar__label" aria-atomic="false">
-          Please select 2 images to proceed.
+          Please select an image to proceed.
         </div>
       </div>
     </aside>
@@ -757,6 +764,7 @@
               class="mdc-image-list__image"
               src="images/logo/imcomp-logo-large-path.svg"
             />
+            <span class="material-icons"> change_circle </span>
           </li>
           <li
             class="mdc-image-list__item w-100 mdc-elevation--z4"
@@ -766,6 +774,7 @@
               class="mdc-image-list__image"
               src="images/logo/imcomp-logo-large-path.svg"
             />
+            <span class="material-icons"> change_circle </span>
           </li>
         </ul>
 

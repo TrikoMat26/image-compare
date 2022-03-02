@@ -1,4 +1,15 @@
-
+const twice = () => {
+    let count = 0;
+    return function() {
+        if (count == 1) {
+            if (this.src.startsWith('blob:')) {
+                URL.revokeObjectURL(this.src);
+            }
+            return;
+        }
+        count++;
+    }
+}
 class Compare {
     constructor(container, result, action_bar) {
         this.c = container;
@@ -78,49 +89,39 @@ class Compare {
         e.target.value = null;
     }
     set_image (images, index = -1) {
+
+        if (images.length > 2 || images.length === 0) {
+            throw new Error('Cannot use function with 0 or more than 2 images')
+        }
+        if (images.length === 1 && !(index === 0 || index === 1)) {
+            index = 0;
+            this.set_image(['./images/empty.svg'], 1);
+        }
+
         const v_imgs = this.v_image_list.querySelectorAll('img');
         const h_imgs = this.h_image_list.querySelectorAll('img');
 
-        const twice = () => {
-            let count = 0;
-            return function() {
-                if (count == 1) {
-                    URL.revokeObjectURL(this.src);
-                    return;
-                }
-                count++;
-            }
-        }
-
         if (images.length == 2) {
             if (!v_imgs) {
-                // Create new img elements
-                v_imgs = [new document.createElement('img'), new document.createElement('img')];
-                h_imgs = [new document.createElement('img'), new document.createElement('img')];
+                //TODO Create new img elements if it doesn't exist?
+                throw new Error('No Image elements!');
             }
 
             images.map((_im, idx) => {
-                const handler = twice();
-                v_imgs[idx].onload = h_imgs[idx].onload = handler;
+                if (v_imgs[idx].onload === null) {
+                    const handler = twice();
+                    v_imgs[idx].onload = h_imgs[idx].onload = handler;
+                }
                 v_imgs[idx].src = h_imgs[idx].src = _im;
             });
             return;
         }
 
-        if (images.length > 2 || images.length === 0) {
-            console.error('Cannot use function with 0 or more than 2 images')
-            return;
+        if (v_imgs[index].onload === null) {
+            const handler = twice();
+            v_imgs[index].onload = h_imgs[index].onload = handler;
         }
-
-        if (index !== 0 && index !== 1) {
-            console.error('Index can only be 0 or 1 when only one image is passed')
-            return;
-        }
-
-        const handler = twice();
-        v_imgs[index].onload = h_imgs[index].onload = handler;
         v_imgs[index].src = h_imgs[index].src = images[0]
-
     }
 
     show_compare_screen () {
