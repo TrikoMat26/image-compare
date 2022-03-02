@@ -22,7 +22,7 @@ class MainView {
     }
 
     async handle_files(e) {
-        if (e.target.files.length < 2) {
+        if (e.target.files.length == 0) {
             // TODO: Raise an event to show toast / snackbar
             this.snackbar.MDCSnackbar.open();
             return;
@@ -31,7 +31,7 @@ class MainView {
         // TODO: Raise warning if more than 2 images are selected.
         const { files } = e.target;
         const urls = [];
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < Math.min(2, files.length); i++) {
             urls.push(URL.createObjectURL(files[i]));
         }
 
