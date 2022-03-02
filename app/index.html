@@ -153,6 +153,7 @@
 
       /* Select dropdown colours */
       .mdc-select {
+        height: 100%;
         pointer-events: auto;
         width: max(128px, min(256px, 40vw));
       }
@@ -988,7 +989,7 @@
               >
             </span>
           </button>
-          <div class="mdc-tab">
+          <div class="mdc-tab mdc-tab--stacked">
             <span class="mdc-tab__content">
               <div
                 class="mdc-select mdc-select--outlined gone"
@@ -1108,6 +1109,7 @@
               <div
                 class="mdc-select mdc-select--filled"
                 data-mdc-auto-init="MDCSelect"
+                title="Click to change visualisation mode"
               >
                 <div
                   class="mdc-select__anchor"
@@ -1117,11 +1119,11 @@
                   aria-labelledby="selected-text"
                 >
                   <span class="mdc-select__ripple"></span>
-                  <!-- <span
+                  <span
                     id="select-label"
-                    class="mdc-floating-label mdc-theme--on-primary"
+                    class="mdc-floating-label mdc-floating-label--float-above mdc-theme--on-primary mdc-typography--body1"
                     >Visualisation</span
-                  > -->
+                  >
                   <span class="mdc-select__selected-text-container">
                     <span
                       id="selected-text"
