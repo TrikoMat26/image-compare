@@ -1,7 +1,15 @@
 ## [Unreleased]
 - Advanced mode to allow users to choose the transformation (identity, similarity, affine, thin plate spline)
 - Photometric transform
+
+
+## [0.3.0] - 2022-03-04
 - Support landscape view mode
+- Export Aligned Images as PNGs and the Toggle visualisation as a GIF.
+- Images will occupy available free space.
+- Clarify UI with icons, supporting text.
+- Added Licenses
+- Self hosting third party dependencies (materialui, gifshot, icons, fonts, etc.)
 
 ## [0.2.0] - 2022-01-28
 - new visualisations: toggle, slider, overlay, hover, difference

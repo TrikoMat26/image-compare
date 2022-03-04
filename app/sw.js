@@ -3,12 +3,13 @@
 // https://vaadin.com/learn/tutorials/learn-pwa/turn-website-into-a-pwa
 // https://github.com/jakearchibald/wittr/blob/cache-avatars/public/js/sw/index.js
 // Cache
-const CACHE_NAME = "imcomp-mdc-pwa-v2";
+const CACHE_NAME = "imcomp-mdc-pwa-v3";
 const staticAssets = [
     './',
     './favicon.ico',
     './manifest.json',
     './index.html',
+    './licenses.txt',
     './images/icons/imcomp-512x512.png',
     './images/icons/imcomp-256x256.png',
     './images/icons/imcomp-192x192.png',
@@ -16,6 +17,7 @@ const staticAssets = [
     './images/logo/imcomp-logo-large-path.svg',
     './images/logo/image-compare-1.svg',
     './images/logo/image-compare-2.svg',
+    './images/empty.svg',
     './images/usecases/book/case2-traherne2-a-original.jpg',
     './images/usecases/book/case2-traherne2-b-original.jpg',
     './images/usecases/churchill/case3-churchill-1.jpg',
@@ -34,11 +36,10 @@ const staticAssets = [
     './js/samples.js',
     './js/viz.js',
     './js/transform.js',
-    'https://unpkg.com/material-components-web@v13.0.0/dist/material-components-web.min.js',
-    'https://fonts.googleapis.com/css?family=Roboto:300,400,500',
-    'https://fonts.googleapis.com/css?family=Material+Icons&display=block',
-    'https://fonts.gstatic.com/s/materialicons/v115/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2',
-    'https://unpkg.com/material-components-web@v13.0.0/dist/material-components-web.min.css',
+    './deps/gifshot.js',
+    './deps/material-components-web.min.js',
+    './deps/material-components-web.min.css',
+    './fonts/material-icons.ttf',
 ]
 
 self.addEventListener('install', (e) => {
