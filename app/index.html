@@ -355,7 +355,7 @@
         display: grid;
         min-height: 0;
         max-height: 100%;
-        grid-template-rows: min(128px, max(20vh, 64px)) minmax(0, 1fr) auto;
+        grid-template-rows: auto minmax(0, 1fr) auto;
         grid-template-columns: 100vw 100vw;
         z-index: 1;
       }
@@ -375,6 +375,7 @@
         padding: 1em;
         margin: 0;
         justify-self: center;
+        display: none;
       }
       #compare_container > .vertical-image-list > li {
         background-color: #f7f7f7;
@@ -512,6 +513,14 @@
         }
         #compare_container > .vertical-image-list > li {
           height: 100%;
+        }
+      }
+      @media screen and (min-height: 512px) {
+        #compare_container {
+          grid-template-rows: min(128px, max(20vh, 64px)) minmax(0, 1fr) auto;
+        }
+        #compare_container > .horizontal-image-list {
+          display: flex;
         }
       }
     </style>
