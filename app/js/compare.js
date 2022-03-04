@@ -16,6 +16,7 @@ class Compare {
         this.cc = document.getElementById('compare_container');
         this.h_image_list = this.c.querySelector('ul.mdc-image-list.horizontal-image-list');
         this.v_image_list = this.c.querySelector('ul.mdc-image-list.vertical-image-list');
+        this.selected_filename_list = [];
 
         this.action_bar = action_bar;
         this.result = result;
@@ -28,10 +29,15 @@ class Compare {
         this.back_btn = document.getElementById('back');
         this.more_btn = document.getElementById('more');
 
+        this.more_menu_el = document.getElementById('more_menu');
 
         this.input = document.getElementById('image_select_input2');
         const process_images = (function(){
             const v_imgs = this.v_image_list.querySelectorAll('img');
+            if(this.selected_filename_list.length) {
+                const selected_filename_list = this.selected_filename_list;
+                this.result.set_filename_list(selected_filename_list);
+            }
             this.result.process(...v_imgs);
         }).bind(this);
 
@@ -45,6 +51,11 @@ class Compare {
         }
 
         this.c.addEventListener('transform', () => {
+            var li = this.more_menu_el.querySelectorAll('.mdc-deprecated-list-item--disabled');
+            for(var i=0; i<li.length; ++i) {
+                li[i].classList.remove('mdc-deprecated-list-item--disabled');
+            }
+
             this.show_result_screen();
             this.compare_label.textContent = 'Compare';
             this.compare_btn.disabled = false;
@@ -88,6 +99,11 @@ class Compare {
 
         e.target.value = null;
     }
+
+    set_filename (filename_list) {
+        this.selected_filename_list = filename_list;
+    }
+
     set_image (images, index = -1) {
 
         if (images.length > 2 || images.length === 0) {
@@ -125,6 +141,11 @@ class Compare {
     }
 
     show_compare_screen () {
+        var li = this.more_menu_el.querySelectorAll('.mdc-deprecated-list-item');
+        for(var i=0; i<2; ++i) {
+            li[i].classList.add('mdc-deprecated-list-item--disabled');
+        }
+
         this.select.classList.add('hide');
         this.select.MDCSelect.setValue('toggle');
         this.select.querySelector('#selected-text').textContent = 'Toggle';
