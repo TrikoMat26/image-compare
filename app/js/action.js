@@ -40,6 +40,30 @@ class Action {
         this.hover_add = hover_add;
         this.hover_remove = hover_remove;
 
+        this.more_menu_el = document.getElementById('more_menu');
+        this.info_dialog_el = document.getElementById('info-dialog');
+        this.snack_el = document.getElementById('snack');
+
+        this.more_menu_el.addEventListener('MDCMenu:selected', function(e) {
+            const menu_item_name = e.detail.item.dataset.name;
+            switch(menu_item_name) {
+            case 'export_aligned_images':
+                this.export_aligned_images();
+                break;
+            case 'export_toggle':
+                this.export_gif();
+                break;
+            case 'licenses':
+                this.download_el.href = 'licenses.txt';
+                this.download_el.target = '_blank';
+                this.download_el.removeAttribute('download');
+                this.download_el.click();
+                break;
+            case 'about':
+                this.info_dialog_el.MDCDialog.open();
+                break;
+            }
+        }.bind(this));
 
     }
 
@@ -431,5 +455,59 @@ class Action {
         this.reset_toggle_ui(clicked_btn, active_btn);
 
         this.TOGGLE_SPEED = Number.parseInt(clicked_btn.dataset.speed);
+    }
+
+    export_aligned_images() {
+        var filename_list = this.result.selected_filename_list;
+        if(filename_list.length === 0) {
+            filename_list = ['im1.png', 'im2-aligned.png'];
+        }
+        const im1 = this.result.getImageData(this.result.input_image);
+        this.result.bctx.putImageData( im1, 0, 0 );
+        this.download_el.href = this.result.bcanvas.toDataURL("image/png");
+        this.download_el.download = filename_list[0];
+        this.download_el.click();
+
+        this.download_el.href = this.result.tcanvas.toDataURL("image/png");
+        this.download_el.download = filename_list[1];
+        this.download_el.click();
+
+        this.snack_el.MDCSnackbar.labelText = 'Saved two aligned images.';
+        this.snack_el.MDCSnackbar.open();
+
+    }
+
+    export_gif() {
+        var gif_filename = 'im1-im2-toggle.gif';
+        const filename_list = this.result.selected_filename_list;
+        if(filename_list.length !== 0) {
+            gif_filename = filename_list[0] + '-' + filename_list[1] + '.gif';
+        }
+
+        const im1_data = this.result.getImageData(this.result.input_image);
+        this.result.bctx.putImageData( im1_data, 0, 0 );
+        var im1 = document.createElement('img');
+        im1.src = this.result.bcanvas.toDataURL("image/png");
+
+        var im2 = document.createElement('img');
+        im2.src = this.result.tcanvas.toDataURL("image/png");;
+
+        gifshot.createGIF({
+            'images':[im1, im2],
+            'frameDuration':4,
+            'gifWidth':im1_data.width,
+            'gifHeight':im1_data.height
+        }, function(obj) {
+            if(!obj.error) {
+                this.download_el.href = obj.image;
+                this.download_el.download = gif_filename;
+                this.download_el.click();
+                this.snack_el.MDCSnackbar.labelText = 'Saved toggle visualization as GIF image.';
+                this.snack_el.MDCSnackbar.open();
+            } else {
+                this.snack_el.MDCSnackbar.labelText = 'Failed to export toggle view as GIF image.';
+                this.snack_el.MDCSnackbar.open();
+            }
+        }.bind(this));
     }
 }
