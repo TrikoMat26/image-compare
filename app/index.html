@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="theme-color" content="#ffffff" />
-    <title>Image Compare 0.2.0</title>
+    <title>Image Compare 0.3.0</title>
     <meta
       name="description"
       content="Image Compare is a lightweight, standalone and offline application to visually compare a pair of images and highlight their differences. This application can be used in desktop computers and mobile phones without requiring installation as it runs entires in a web browser. Image Compare is an open source software developed and maintained by the VGG Oxford."
@@ -153,8 +153,7 @@
       }
       /* Disable text transforms in tab */
       .mdc-tab {
-        --mdc-typography-caption-text-transform: none;
-        --mdc-typography-body1-text-transform: none;
+        text-transform: none;
       }
 
       /* Info dialog */
@@ -863,7 +862,7 @@
                   >
                     <span class="mdc-tab__content">
                       <span class="mdc-tab__text-label mdc-theme--on-primary"
-                        >Normal</span
+                        >NORMAL</span
                       >
                     </span>
                   </button>
@@ -1274,27 +1273,93 @@
               </div>
             </span>
           </div>
-          <button id="more" class="mdc-tab mdc-tab--stacked">
-            <!-- <span class="mdc-tab__content">
-              <span
-                class="mdc-tab__icon material-icons mdc-typography--caption mdc-theme--on-primary"
-                aria-hidden="true"
-              ></span>
-              <span
-                class="mdc-tab__text-label mdc-theme--on-primary mdc-typography--caption"
-              ></span>
-            </span> -->
+
+          <button
+            id="more"
+            class="mdc-tab mdc-tab--stacked mdc-menu-surface--anchor"
+          >
             <span class="mdc-tab__content">
               <span
                 class="mdc-tab__icon material-icons mdc-typography--caption mdc-theme--on-primary"
                 aria-hidden="true"
-                >info</span
+                >more_vert</span
               >
               <span
                 class="mdc-tab__text-label mdc-theme--on-primary mdc-typography--caption"
-                >Info</span
+                >More</span
               >
             </span>
+            <div
+              class="mdc-menu mdc-menu-surface"
+              id="more_menu"
+              data-mdc-auto-init="MDCMenu"
+            >
+              <ul
+                class="mdc-deprecated-list"
+                role="menu"
+                aria-hidden="true"
+                aria-orientation="vertical"
+                tabindex="-1"
+              >
+                <li
+                  class="mdc-deprecated-list-item mdc-deprecated-list-item--disabled"
+                  role="menuitem"
+                  data-name="export_aligned_images"
+                >
+                  <span class="mdc-deprecated-list-item__ripple"></span>
+                  <span
+                    class="mdc-deprecated-list-item__graphic mdc-menu__selection-group-icon material-icons"
+                    aria-hidden="true"
+                    >collections</span
+                  >
+                  <span class="mdc-deprecated-list-item__text"
+                    >Export Aligned Images</span
+                  >
+                </li>
+                <li
+                  class="mdc-deprecated-list-item mdc-deprecated-list-item--disabled"
+                  role="menuitem"
+                  data-name="export_toggle"
+                >
+                  <span class="mdc-deprecated-list-item__ripple"></span>
+                  <span
+                    class="mdc-deprecated-list-item__graphic mdc-menu__selection-group-icon material-icons"
+                    aria-hidden="true"
+                    >gif</span
+                  >
+                  <span class="mdc-deprecated-list-item__text"
+                    >Export Toggle View</span
+                  >
+                </li>
+                <li class="mdc-list-divider" role="separator"></li>
+                <li
+                  class="mdc-deprecated-list-item"
+                  role="menuitem"
+                  data-name="licenses"
+                >
+                  <span class="mdc-deprecated-list-item__ripple"></span>
+                  <span
+                    class="mdc-deprecated-list-item__graphic mdc-menu__selection-group-icon material-icons"
+                    aria-hidden="true"
+                    >copyright</span
+                  >
+                  <span class="mdc-deprecated-list-item__text">Licenses</span>
+                </li>
+                <li
+                  class="mdc-deprecated-list-item"
+                  role="menuitem"
+                  data-name="about"
+                >
+                  <span class="mdc-deprecated-list-item__ripple"></span>
+                  <span
+                    class="mdc-deprecated-list-item__graphic mdc-menu__selection-group-icon material-icons"
+                    aria-hidden="true"
+                    >info</span
+                  >
+                  <span class="mdc-deprecated-list-item__text">About</span>
+                </li>
+              </ul>
+            </div>
           </button>
         </div>
       </footer>
@@ -1303,6 +1368,7 @@
       src="./deps/material-components-web.min.js"
       integrity="sha384-8iww5N0HFABAFdwBAcqef8367heaZqV6cGdI2zjVr6ztCVbINoKlnoyYyCvkEtAt"
     ></script>
+    <script src="deps/gifshot.js"></script>
     <script src="js/transform.js"></script>
     <script src="js/main.js"></script>
     <script src="js/viz.js"></script>
@@ -1317,6 +1383,7 @@
       const samples_el = document.querySelector("div.samples");
       const result_el = document.querySelector("#result");
       const dialog_el = document.getElementById("info-dialog");
+      const more_menu_el = document.getElementById("more_menu");
 
       let main, result, compare, samples;
 
@@ -1383,6 +1450,7 @@
 
           main.c.addEventListener("select_image", (e) => {
             compare.set_image(e.detail.urls);
+            compare.set_filename(e.detail.selected_filename_list);
             compare.show_compare_screen();
           });
 
@@ -1395,7 +1463,7 @@
           });
 
           compare.c.addEventListener("more", () => {
-            dialog_el.MDCDialog.open();
+            more_menu_el.MDCMenu.open = true;
           });
 
           samples.c.addEventListener("select_sample", (e) => {
