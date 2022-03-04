@@ -47,8 +47,12 @@
       function gtag() {
         dataLayer.push(arguments);
       }
+      gtag("consent", "default", {
+        ad_storage: "denied",
+        analytics_storage: "denied",
+      });
       gtag("js", new Date());
-      gtag("config", "G-T47X77WPWN");
+      gtag("config", "G-T47X77WPWN", { anonymize_ip: true });
     </script>
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="apple-touch-icon" href="./images/icons/imcomp-192x192.png" />
