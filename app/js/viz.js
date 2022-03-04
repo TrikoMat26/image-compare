@@ -19,7 +19,14 @@ class Visualization {
         this.ctx = this.canvas.getContext('2d');
         this.bctx = this.bcanvas.getContext('2d');
         this.tctx = this.tcanvas.getContext('2d');
+
+        this.selected_filename_list = [];
     }
+
+    set_filename_list(filename_list) {
+        this.selected_filename_list = filename_list;
+    }
+
     process(img1, img2) {
         this.input_image = img1;
         const im1Data = this.getImageData(img1);

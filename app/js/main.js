@@ -31,13 +31,16 @@ class MainView {
         // TODO: Raise warning if more than 2 images are selected.
         const { files } = e.target;
         const urls = [];
+        const selected_filename_list = [];
         for (let i = 0; i < Math.min(2, files.length); i++) {
             urls.push(URL.createObjectURL(files[i]));
+            selected_filename_list.push(files[i].name);
         }
 
         const ev = new CustomEvent('select_image', {
             detail: {
-                urls
+                urls,
+                selected_filename_list
             }
         });
         this.c.dispatchEvent(ev);
