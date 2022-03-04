@@ -219,7 +219,59 @@ class Action {
 
     dragElement(el) {
         // Track width and padding are equal
-        const _PADDING = (0.25 * parseFloat(getComputedStyle(el.parentElement).fontSize));
+        let pw = 0;
+        let ph = 0;
+        let m = 0;
+        let M = 0;
+        let padding = 0;
+        let padding_tb = 0;
+        let padding_lr = 0;
+        let timeout = null;
+        const getBounds = () => {
+            padding = (0.25 * parseFloat(getComputedStyle(el.parentElement).fontSize));
+            let { x, y, width, height } = this.result.canvas.getBoundingClientRect();
+            width -= 2*padding;
+            height -= 2*padding;
+
+            const iw = this.result.canvas.width;
+            const ih = this.result.canvas.height;
+
+            let rh = 0;
+            let rw = 0;
+
+            // Aspect ratio
+            const iar = iw / ih;
+            const ar = width / height;
+
+            if (iar < ar) {
+                // Rendered on wider screen
+                rh = height;
+                rw = rh * iar;
+            } else {
+                // Rendered on narrower screen
+                rw = width;
+                rh = rw / iar;
+            }
+            // TODO Get padding programmatically of the canvas element
+            // Now the padding is manually copied from CSS - 2.5% LR and 0.5em TB;
+            // TODO: Include track width.
+            pw = rw + 2*padding;
+            ph = rh + 2*padding;
+
+            padding_lr = (width - rw) / 2;
+            padding_tb = (height - rh) / 2;
+            m = (this.HORIZONTAL ? x : y);
+            M = this.HORIZONTAL ? (pw + padding_lr - padding / 2) : (ph + padding_tb - padding / 2);
+        }
+        window.addEventListener('resize', () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                getBounds();
+                if (this.MODE === 'slide') {
+                    this.show();
+                }
+            }, 250);
+        });
         const dragMove = (e) => {
           e = e || window.event;
 
@@ -232,37 +284,23 @@ class Action {
           }
           e.preventDefault();
 
-          const {
-            x,
-            y,
-            width: w,
-            height: h,
-          } = el.parentElement.getBoundingClientRect();
-
-          // TODO Get padding programmatically of the canvas element
-          // Now the padding is manually copied from CSS - 2.5% LR and 0.5em TB;
-          const PADDING = _PADDING;
-
-          // TODO: Done manually
-          // need to do math -> (padding - track_width / 2) < - > width - track width
-          const m = PADDING / 2;
-          const M = this.HORIZONTAL ? (w - PADDING) : (h - PADDING);
-
           let _slide_factor = 0.5;
           if (this.HORIZONTAL) {
-            const cx = (e.clientX || e.changedTouches[0].clientX) - x;
-            _slide_factor = Math.max(m, Math.min(cx, M));
+            const cx = (e.clientX || e.changedTouches[0].clientX) - m;
+            _slide_factor = Math.max(padding_lr + padding / 2, Math.min(cx, M));
             el.style.left = `${_slide_factor}px`;
           } else {
-            const cy = (e.clientY || e.changedTouches[0].clientY) - y;
-            _slide_factor = Math.max(m, Math.min(cy, M));
+            const cy = (e.clientY || e.changedTouches[0].clientY) - m;
+            _slide_factor = Math.max(padding_tb + padding / 2, Math.min(cy, M));
             el.style.top = `${_slide_factor}px`
           }
 
+          const _padding = ((this.HORIZONTAL ? padding_lr : padding_tb) + padding / 2);
+
           // https://stackoverflow.com/questions/11832914/how-to-round-to-at-most-2-decimal-places-if-necessary
-          _slide_factor -= m;
-          _slide_factor /= M - m;
-          _slide_factor = +_slide_factor.toFixed(2);
+          _slide_factor -= _padding;
+          _slide_factor /= (M - _padding);
+          _slide_factor = +_slide_factor.toFixed(3);
           this.SLIDE = _slide_factor;
         };
 
@@ -285,6 +323,7 @@ class Action {
           }
 
           e.preventDefault();
+          getBounds();
           this.result_container.onmousemove = this.result_container.ontouchmove =
             dragMove;
           window.onmouseup = window.ontouchend =

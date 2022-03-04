@@ -1,8 +1,10 @@
 const MAX_DIM = 1024;
 class Visualization {
 
-    constructor(canvas, transform) {
-        this.canvas = canvas;
+    constructor(c, transform) {
+        this.c = c;
+        this.canvas = c.querySelector("canvas");
+        ;
         this.transform = transform;
 
         // Canvas to hold the transformed result
@@ -11,8 +13,8 @@ class Visualization {
         // Temporary canvas to read / write image data
         this.bcanvas = document.createElement('canvas');
 
-        this.bcanvas.width = this.tcanvas.width = canvas.width;
-        this.bcanvas.height = this.tcanvas.width = canvas.height;
+        this.bcanvas.width = this.tcanvas.width = this.canvas.width;
+        this.bcanvas.height = this.tcanvas.width = this.canvas.height;
 
         this.ctx = this.canvas.getContext('2d');
         this.bctx = this.bcanvas.getContext('2d');
