@@ -56,65 +56,28 @@
     </script>
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="apple-touch-icon" href="./images/icons/imcomp-192x192.png" />
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
-    <link rel="preconnect" href="https://unpkg.com/" crossorigin />
+
     <link
       rel="preload"
-      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
-      as="style"
-      type="text/css"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="preload"
-      href="https://fonts.googleapis.com/css?family=Material+Icons&display=block"
-      as="style"
-      type="text/css"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="preload"
-      href="https://fonts.gstatic.com/s/materialicons/v115/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="preload"
-      href="https://unpkg.com/material-components-web@v13.0.0/dist/material-components-web.min.css"
+      href="./deps/material-components-web.min.css"
       as="style"
       type="text/css"
       integrity="sha384-zYyxh4r8CWy0xvG1ua+/rTeQmFY/YhmqzzaqluuGnN9+fCFSj/jF1AwiW9p+KUW/"
-      crossorigin="anonymous"
     />
     <link
       rel="preload"
-      href="https://unpkg.com/material-components-web@v13.0.0/dist/material-components-web.min.js"
+      href="./deps/material-components-web.min.js"
       as="script"
       type="text/javascript"
       integrity="sha384-8iww5N0HFABAFdwBAcqef8367heaZqV6cGdI2zjVr6ztCVbINoKlnoyYyCvkEtAt"
-      crossorigin="anonymous"
     />
 
     <!-- Required styles for Material Web -->
     <link
       rel="stylesheet"
-      href="https://unpkg.com/material-components-web@v13.0.0/dist/material-components-web.min.css"
+      href="./deps/material-components-web.min.css"
       integrity="sha384-zYyxh4r8CWy0xvG1ua+/rTeQmFY/YhmqzzaqluuGnN9+fCFSj/jF1AwiW9p+KUW/"
-      crossorigin="anonymous"
     />
-
-    <link
-      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
-      rel="stylesheet"
-      crossorigin="anonymous"
-    />
-    <link
-      href="https://fonts.googleapis.com/css?family=Material+Icons&display=block"
-      rel="stylesheet"
-      crossorigin="anonymous"
-    />
-
     <style>
       * {
         box-sizing: border-box;
@@ -128,6 +91,65 @@
         height: 100%;
         min-height: 100%;
         overflow: hidden;
+      }
+      /* https://developers.google.com/fonts/docs/material_icons#setup_method_2_self_hosting */
+      @font-face {
+        font-family: "Material Icons";
+        font-style: normal;
+        font-weight: 400;
+        font-display: block;
+        src: local("Material Icons"), local("MaterialIcons-Regular"),
+          url("fonts/material-icons.ttf") format("truetype");
+      }
+      .material-icons {
+        font-family: "Material Icons";
+        font-weight: normal;
+        font-style: normal;
+        font-size: 24px; /* Preferred icon size */
+        display: inline-block;
+        line-height: 1;
+        text-transform: none;
+        letter-spacing: normal;
+        word-wrap: normal;
+        white-space: nowrap;
+        direction: ltr;
+
+        /* Support for all WebKit browsers. */
+        -webkit-font-smoothing: antialiased;
+        /* Support for Safari and Chrome. */
+        text-rendering: optimizeLegibility;
+
+        /* Support for Firefox. */
+        -moz-osx-font-smoothing: grayscale;
+
+        /* Support for IE. */
+        font-feature-settings: "liga";
+      }
+
+      /* https://google-webfonts-helper.herokuapp.com/fonts/roboto?subsets=latin */
+      /* roboto-300 - latin */
+      @font-face {
+        font-family: "Roboto";
+        font-style: normal;
+        font-weight: 300;
+        src: local("Roboto-Light"),
+          url("fonts/roboto-300.woff2") format("woff2"); /* Chrome 26+, Opera 23+, Firefox 39+ */
+      }
+      /* roboto-regular - latin */
+      @font-face {
+        font-family: "Roboto";
+        font-style: normal;
+        font-weight: 400;
+        src: local("Roboto"), local("Roboto-Regular"),
+          url("fonts/roboto-regular.woff2") format("woff2"); /* Chrome 26+, Opera 23+, Firefox 39+ */
+      }
+      /* roboto-500 - latin */
+      @font-face {
+        font-family: "Roboto";
+        font-style: normal;
+        font-weight: 500;
+        src: local("Roboto-Medium"),
+          url("fonts/roboto-500.woff2") format("woff2"); /* Chrome 26+, Opera 23+, Firefox 39+ */
       }
       /* Disable text transforms in tab */
       .mdc-tab {
@@ -1269,9 +1291,8 @@
       </footer>
     </div>
     <script
-      src="https://unpkg.com/material-components-web@v13.0.0/dist/material-components-web.min.js"
+      src="./deps/material-components-web.min.js"
       integrity="sha384-8iww5N0HFABAFdwBAcqef8367heaZqV6cGdI2zjVr6ztCVbINoKlnoyYyCvkEtAt"
-      crossorigin="anonymous"
     ></script>
     <script src="js/transform.js"></script>
     <script src="js/main.js"></script>
