@@ -404,24 +404,22 @@
       div.result_container {
         grid-area: 2 / 2;
         position: relative;
+        overflow: hidden;
         display: flex;
         flex-flow: column nowrap;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
       }
       #result {
-        min-height: 0;
-        width: fit-content;
-        width: -moz-fit-content;
-        flex: 0 1 auto;
+        flex: 1;
+        margin: auto;
         position: relative;
         border: 1px black solid;
+        height: 100%;
       }
       #result > canvas {
         padding: 0.25em;
-        max-width: 100%;
+        width: 100%;
         height: 100%;
+        object-fit: contain;
       }
 
       #result > div.image_slider {
@@ -1274,7 +1272,6 @@
       const action_el = document.getElementById("action");
       const samples_el = document.querySelector("div.samples");
       const result_el = document.querySelector("#result");
-      const canvas_el = result_el.querySelector("canvas");
       const dialog_el = document.getElementById("info-dialog");
 
       let main, result, compare, samples;
@@ -1335,7 +1332,7 @@
         window.mdc.autoInit();
         transform.then((Module) => {
           main = new MainView(main_el, snack_el);
-          result = new Visualization(canvas_el, Module);
+          result = new Visualization(result_el, Module);
           action_bar = new Action(action_el, result);
           compare = new Compare(compare_el, result, action_bar);
           samples = new Samples(samples_el);
