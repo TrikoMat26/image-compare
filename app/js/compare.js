@@ -96,7 +96,7 @@ class Compare {
         this.set_image(
             [URL.createObjectURL(files[0])],
             Number.parseInt(e.target.dataset.click));
-
+        this.selected_filename_list[e.target.dataset.click] = files[0].name || `im${e.target.dataset.click}`;
         e.target.value = null;
     }
 

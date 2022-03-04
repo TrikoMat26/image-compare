@@ -459,7 +459,7 @@ class Action {
 
     export_aligned_images() {
         var filename_list = this.result.selected_filename_list;
-        if(filename_list.length === 0) {
+        if(filename_list.length !== 2) {
             filename_list = ['im1.png', 'im2-aligned.png'];
         }
         const im1 = this.result.getImageData(this.result.input_image);
@@ -478,9 +478,9 @@ class Action {
     }
 
     export_gif() {
-        var gif_filename = 'im1-im2-toggle.gif';
+        var gif_filename = 'im1-im2-aligned-toggle.gif';
         const filename_list = this.result.selected_filename_list;
-        if(filename_list.length !== 0) {
+        if(filename_list.length === 2) {
             gif_filename = filename_list[0] + '-' + filename_list[1] + '.gif';
         }
 
