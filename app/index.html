@@ -1274,45 +1274,93 @@
             </span>
           </div>
 
-          <div id="more_menu_container" class="mdc-menu-surface--anchor">
-            <button id="more" class="mdc-tab mdc-tab--stacked">
-              <span class="mdc-tab__content">
-                <span
-                  class="mdc-tab__icon material-icons mdc-typography--caption mdc-theme--on-primary"
-                  aria-hidden="true"
-                  >more_vert</span>
-                <span
-                  class="mdc-tab__text-label mdc-theme--on-primary mdc-typography--caption"
-                  >More</span>
-              </span>
-            </button>
-            <div class="mdc-menu mdc-menu-surface" id="more_menu" data-mdc-auto-init="MDCMenu">
-              <ul class="mdc-deprecated-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
-                <li class="mdc-deprecated-list-item mdc-deprecated-list-item--disabled" role="menuitem" data-name="export_aligned_images">
+          <button
+            id="more"
+            class="mdc-tab mdc-tab--stacked mdc-menu-surface--anchor"
+          >
+            <span class="mdc-tab__content">
+              <span
+                class="mdc-tab__icon material-icons mdc-typography--caption mdc-theme--on-primary"
+                aria-hidden="true"
+                >more_vert</span
+              >
+              <span
+                class="mdc-tab__text-label mdc-theme--on-primary mdc-typography--caption"
+                >More</span
+              >
+            </span>
+            <div
+              class="mdc-menu mdc-menu-surface"
+              id="more_menu"
+              data-mdc-auto-init="MDCMenu"
+            >
+              <ul
+                class="mdc-deprecated-list"
+                role="menu"
+                aria-hidden="true"
+                aria-orientation="vertical"
+                tabindex="-1"
+              >
+                <li
+                  class="mdc-deprecated-list-item mdc-deprecated-list-item--disabled"
+                  role="menuitem"
+                  data-name="export_aligned_images"
+                >
                   <span class="mdc-deprecated-list-item__ripple"></span>
-                  <span class="mdc-deprecated-list-item__graphic mdc-menu__selection-group-icon material-icons" aria-hidden="true">collections</span>
-                  <span class="mdc-deprecated-list-item__text">Export Aligned Images</span>
+                  <span
+                    class="mdc-deprecated-list-item__graphic mdc-menu__selection-group-icon material-icons"
+                    aria-hidden="true"
+                    >collections</span
+                  >
+                  <span class="mdc-deprecated-list-item__text"
+                    >Export Aligned Images</span
+                  >
                 </li>
-                <li class="mdc-deprecated-list-item mdc-deprecated-list-item--disabled" role="menuitem" data-name="export_toggle">
+                <li
+                  class="mdc-deprecated-list-item mdc-deprecated-list-item--disabled"
+                  role="menuitem"
+                  data-name="export_toggle"
+                >
                   <span class="mdc-deprecated-list-item__ripple"></span>
-                  <span class="mdc-deprecated-list-item__graphic mdc-menu__selection-group-icon material-icons" aria-hidden="true">gif</span>
-                  <span class="mdc-deprecated-list-item__text">Export Toggle View</span>
+                  <span
+                    class="mdc-deprecated-list-item__graphic mdc-menu__selection-group-icon material-icons"
+                    aria-hidden="true"
+                    >gif</span
+                  >
+                  <span class="mdc-deprecated-list-item__text"
+                    >Export Toggle View</span
+                  >
                 </li>
                 <li class="mdc-list-divider" role="separator"></li>
-                <li class="mdc-deprecated-list-item" role="menuitem" data-name="licenses">
+                <li
+                  class="mdc-deprecated-list-item"
+                  role="menuitem"
+                  data-name="licenses"
+                >
                   <span class="mdc-deprecated-list-item__ripple"></span>
-                  <span class="mdc-deprecated-list-item__graphic mdc-menu__selection-group-icon material-icons" aria-hidden="true">copyright</span>
+                  <span
+                    class="mdc-deprecated-list-item__graphic mdc-menu__selection-group-icon material-icons"
+                    aria-hidden="true"
+                    >copyright</span
+                  >
                   <span class="mdc-deprecated-list-item__text">Licenses</span>
                 </li>
-                <li class="mdc-deprecated-list-item" role="menuitem" data-name="about">
+                <li
+                  class="mdc-deprecated-list-item"
+                  role="menuitem"
+                  data-name="about"
+                >
                   <span class="mdc-deprecated-list-item__ripple"></span>
-                  <span class="mdc-deprecated-list-item__graphic mdc-menu__selection-group-icon material-icons" aria-hidden="true">info</span>
+                  <span
+                    class="mdc-deprecated-list-item__graphic mdc-menu__selection-group-icon material-icons"
+                    aria-hidden="true"
+                    >info</span
+                  >
                   <span class="mdc-deprecated-list-item__text">About</span>
                 </li>
               </ul>
             </div>
-          </div>
-
+          </button>
         </div>
       </footer>
     </div>
@@ -1401,7 +1449,6 @@
           samples = new Samples(samples_el);
 
           main.c.addEventListener("select_image", (e) => {
-
             compare.set_image(e.detail.urls);
             compare.set_filename(e.detail.selected_filename_list);
             compare.show_compare_screen();
