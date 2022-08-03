@@ -1,4 +1,53 @@
 const MAX_DIM = 1024;
+
+const COLOR_CHANNELS = {
+    red: "#F00",
+    green: "#0F0",
+    blue: "#00F",
+    bg: "#0FF",
+    rg: "#FF0",
+    rb: "#F0F",
+    rgb: "#FFF",
+};
+
+const multiplyChannel = (_ctx, cname) => {
+    _ctx.save();
+    _ctx.fillStyle = COLOR_CHANNELS[cname] || "#000";
+    _ctx.globalCompositeOperation = "multiply";
+    _ctx.fillRect(0, 0, _ctx.canvas.width, _ctx.canvas.height);
+    _ctx.restore();
+};
+const grayscale = (_ctx) => {
+    _ctx.save();
+    _ctx.fillStyle = "#000";
+    _ctx.globalCompositeOperation = "saturation";
+    _ctx.fillRect(0, 0, _ctx.canvas.width, _ctx.canvas.height);
+    _ctx.restore();
+};
+
+const copyImage = (_ctx, _img, bbox = null) => {
+    // Copy image to canvas
+    const iw = _img.naturalWidth || _img.width;
+    const ih = _img.naturalHeight || _img.height;
+    _ctx.canvas.width = (bbox === null ? iw : bbox.width);
+    _ctx.canvas.height = (bbox === null ? ih : bbox.height);
+    _ctx.clearRect(0, 0, _ctx.canvas.width, _ctx.canvas.height);
+    if (bbox === null) {
+        _ctx.drawImage(_img, 0, 0);
+    } else {
+        _ctx.drawImage(_img,
+            bbox.x,
+            bbox.y,
+            bbox.width,
+            bbox.height,
+            0,
+            0,
+            _ctx.canvas.width,
+            _ctx.canvas.height
+        );
+    }
+};
+
 class Visualization {
 
     constructor(c, transform) {
@@ -13,12 +62,16 @@ class Visualization {
         // Temporary canvas to read / write image data
         this.bcanvas = document.createElement('canvas');
 
-        this.bcanvas.width = this.tcanvas.width = this.canvas.width;
-        this.bcanvas.height = this.tcanvas.width = this.canvas.height;
+        // Temporary canvas to use for computing diff
+        this.dcanvas = document.createElement('canvas');
+
+        this.bcanvas.width = this.tcanvas.width = this.dcanvas.width = this.canvas.width;
+        this.bcanvas.height = this.tcanvas.width = this.dcanvas.height = this.canvas.height;
 
         this.ctx = this.canvas.getContext('2d');
         this.bctx = this.bcanvas.getContext('2d');
         this.tctx = this.tcanvas.getContext('2d');
+        this.dctx = this.dcanvas.getContext('2d');
 
         this.selected_filename_list = [];
     }
@@ -29,6 +82,8 @@ class Visualization {
 
     process(img1, img2) {
         this.input_image = img1;
+        this.input_image2 = img2;
+
         const im1Data = this.getImageData(img1);
         const im2Data = this.getImageData(img2);
 
@@ -42,17 +97,6 @@ class Visualization {
 
         this.resultData = new ImageData(
             new Uint8ClampedArray(buf),
-            im1Data.width,
-            im1Data.height
-        );
-
-        const diffBuf = this.transform.getDiff(
-            im1Data.data,
-            this.resultData.data,
-            im1Data.height
-        );
-        this.diffData = new ImageData(
-            new Uint8ClampedArray(diffBuf),
             im1Data.width,
             im1Data.height
         );
@@ -144,7 +188,40 @@ class Visualization {
     }
 
     draw_diff_image() {
-        this.ctx.putImageData(this.diffData, 0, 0);
+
+        // Based on
+        // 1. https://stackoverflow.com/questions/60937639/canvas-splitting-image-into-rgba-components
+        // 2. https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Compositing
+        // 3. https://stackoverflow.com/questions/33822092/greyscale-canvas-make-canvas-color-to-black-and-white
+
+        const { ctx, dctx, dcanvas, input_image, tcanvas } = this;
+
+        // Copy image
+        copyImage(dctx, input_image);
+
+        // gray scale
+        grayscale(dctx);
+
+        // Get channel
+        multiplyChannel(dctx, "red");
+
+        // Copy it to diff canvas
+        copyImage(ctx, dcanvas);
+
+        // copy image2
+        copyImage(dctx, tcanvas);
+
+        // grayscale
+        grayscale(dctx);
+
+        // multiply blue-green
+        multiplyChannel(dctx, "bg");
+
+        // Copy it over diff canvas
+        ctx.save();
+        ctx.globalCompositeOperation = "lighter";
+        ctx.drawImage(dcanvas, 0, 0);
+        ctx.restore();
     }
 
     draw_overlay_image(factor) {
