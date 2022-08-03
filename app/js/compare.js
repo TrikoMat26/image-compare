@@ -25,7 +25,11 @@ class Compare {
         this.compare_label = this.compare_btn.querySelector('span.mdc-button__label');
 
         this.footer = this.c.querySelector('footer');
-        this.select = this.footer.querySelector('.mdc-tab .mdc-select:last-child')
+
+        this.visualisation_select = document.getElementById('visualisation_select');
+        this.transform_select = document.getElementById('transform_select')
+        this.current_transform = 'affine';
+
         this.back_btn = document.getElementById('back');
         this.more_btn = document.getElementById('more');
 
@@ -38,7 +42,7 @@ class Compare {
                 const selected_filename_list = this.selected_filename_list;
                 this.result.set_filename_list(selected_filename_list);
             }
-            this.result.process(...v_imgs);
+            this.result.process(...v_imgs, this.current_transform);
         }).bind(this);
 
         this.compare_btn.onclick = () => {
@@ -61,8 +65,14 @@ class Compare {
             this.compare_btn.disabled = false;
         });
 
-        this.c.addEventListener('MDCSelect:change', ({detail: {value}}) => {
-            this.action_bar.MODE = value;
+        this.c.addEventListener('MDCSelect:change', ({detail: {value}, target}) => {
+            // If transform select, set current transform
+            if (target === this.transform_select) {
+                this.current_transform = value;
+            } else if (target === this.visualisation_select) {
+                // If viz select set mode
+                this.action_bar.MODE = value;
+            }
         });
         this.back_btn.onclick = this.back.bind(this);
 
@@ -146,9 +156,11 @@ class Compare {
             li[i].classList.add('mdc-deprecated-list-item--disabled');
         }
 
-        this.select.classList.add('hide');
-        this.select.MDCSelect.setValue('toggle');
-        this.select.querySelector('#selected-text').textContent = 'Toggle';
+        this.transform_select.classList.remove('hide');
+
+        this.visualisation_select.classList.add('hide');
+        this.visualisation_select.MDCSelect.setValue('toggle');
+        this.visualisation_select.querySelector('#selected-text').textContent = 'Toggle';
 
         this.cc.scrollIntoView({behavior: 'smooth', inline: 'start'});
         window.requestAnimationFrame(() => {
@@ -158,7 +170,10 @@ class Compare {
     }
 
     show_result_screen () {
-        this.select.classList.remove('hide');
+        this.visualisation_select.classList.remove('hide');
+
+        this.transform_select.classList.add('hide');
+
         this.action_bar.show();
         this.cc.scrollIntoView({behavior: 'smooth', inline: 'end'})
         this.back_btn.onclick = this.show_compare_screen.bind(this);

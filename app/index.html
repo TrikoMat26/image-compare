@@ -209,6 +209,12 @@
         fill: var(--mdc-theme-on-primary, #fff);
       }
 
+      #visualisation_select {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
       /* radio button */
       .mdc-radio {
         --mdc-theme-secondary: var(--mdc-theme-primary, #6200ee);
@@ -1034,32 +1040,30 @@
           <div class="mdc-tab mdc-tab--stacked">
             <span class="mdc-tab__content">
               <div
-                class="mdc-select mdc-select--outlined gone"
+                class="mdc-select mdc-select--filled"
                 data-mdc-auto-init="MDCSelect"
+                title="Click to change transform"
+                id="transform_select"
               >
                 <div
                   class="mdc-select__anchor"
                   role="button"
                   aria-haspopup="listbox"
                   aria-expanded="false"
-                  aria-labelledby="outlined-select-label"
+                  aria-labelledby="selected-text"
                 >
-                  <span class="mdc-notched-outline">
-                    <span class="mdc-notched-outline__leading"></span>
-                    <span class="mdc-notched-outline__notch">
-                      <span
-                        id="outlined-select-label"
-                        class="mdc-floating-label mdc-theme--on-primary"
-                        >Visualisation</span
-                      >
-                    </span>
-                    <span class="mdc-notched-outline__trailing"></span>
-                  </span>
+                  <span class="mdc-select__ripple"></span>
+                  <span
+                    id="select-label"
+                    class="mdc-floating-label mdc-floating-label--float-above mdc-theme--on-primary mdc-typography--body1"
+                    >Transform</span
+                  >
                   <span class="mdc-select__selected-text-container">
                     <span
-                      id="demo-selected-text"
-                      class="mdc-select__selected-text mdc-theme--on-primary"
-                    ></span>
+                      id="selected-text"
+                      class="mdc-select__selected-text mdc-theme--on-primary mdc-typography--button"
+                      >Affine</span
+                    >
                   </span>
                   <span class="mdc-select__dropdown-icon">
                     <svg
@@ -1081,6 +1085,7 @@
                       ></polygon>
                     </svg>
                   </span>
+                  <span class="mdc-line-ripple"></span>
                 </div>
                 <div
                   class="mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth"
@@ -1088,70 +1093,81 @@
                   <ul
                     class="mdc-deprecated-list"
                     role="listbox"
-                    aria-label="Visualisation picker listbox"
+                    aria-label="Transform picker listbox"
                   >
-                    <li
+                    <!--li
                       class="mdc-deprecated-list-item"
                       aria-selected="false"
-                      data-value="diff"
+                      data-value="identity"
                       role="option"
                     >
                       <span class="mdc-deprecated-list-item__ripple"></span>
-                      <span class="mdc-deprecated-list-item__text">
-                        Difference
+                      <span
+                        class="mdc-deprecated-list-item__text mdc-typography--body1"
+                      >
+                        Identity
                       </span>
                     </li>
                     <li
                       class="mdc-deprecated-list-item"
                       aria-selected="false"
-                      data-value="hover"
+                      data-value="similarity"
                       role="option"
                     >
                       <span class="mdc-deprecated-list-item__ripple"></span>
-                      <span class="mdc-deprecated-list-item__text">
-                        Hover
+                      <span
+                        class="mdc-deprecated-list-item__text mdc-typography--body1"
+                      >
+                        Similarity
+                      </span>
+                    </li-->
+                    <li
+                      class="mdc-deprecated-list-item mdc-deprecated-list-item--selected"
+                      aria-selected="true"
+                      data-value="affine"
+                      role="option"
+                    >
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span
+                        class="mdc-deprecated-list-item__text mdc-typography--body1"
+                      >
+                        Affine
+                      </span>
+                    </li>
+                    <li
+                      class="mdc-deprecated-list-item"
+                      aria-selected="false"
+                      data-value="perspective"
+                      role="option"
+                    >
+                      <span class="mdc-deprecated-list-item__ripple"></span>
+                      <span
+                        class="mdc-deprecated-list-item__text mdc-typography--body1"
+                      >
+                        Perspective
                       </span>
                     </li>
                     <li
                       class="mdc-deprecated-list-item mdc-deprecated-list-item"
                       aria-selected="false"
-                      data-value="overlay"
+                      data-value="tps"
                       role="option"
                     >
                       <span class="mdc-deprecated-list-item__ripple"></span>
-                      <span class="mdc-deprecated-list-item__text">
-                        Overlay
-                      </span>
-                    </li>
-                    <li
-                      class="mdc-deprecated-list-item"
-                      aria-selected="false"
-                      data-value="slide"
-                      role="option"
-                    >
-                      <span class="mdc-deprecated-list-item__ripple"></span>
-                      <span class="mdc-deprecated-list-item__text">
-                        Slide
-                      </span>
-                    </li>
-                    <li
-                      class="mdc-deprecated-list-item mdc-deprecated-list-item--selected"
-                      aria-selected="true"
-                      data-value="toggle"
-                      role="option"
-                    >
-                      <span class="mdc-deprecated-list-item__ripple"></span>
-                      <span class="mdc-deprecated-list-item__text">
-                        Toggle
+                      <span
+                        class="mdc-deprecated-list-item__text mdc-typography--body1"
+                      >
+                        Thin Plate Spline
                       </span>
                     </li>
                   </ul>
                 </div>
               </div>
               <div
-                class="mdc-select mdc-select--filled"
+                class="mdc-select mdc-select--filled hide"
                 data-mdc-auto-init="MDCSelect"
                 title="Click to change visualisation mode"
+                id="visualisation_select"
               >
                 <div
                   class="mdc-select__anchor"

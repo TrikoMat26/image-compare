@@ -80,23 +80,38 @@ class Visualization {
         this.selected_filename_list = filename_list;
     }
 
-    process(img1, img2) {
+    process(img1, img2, transform) {
         this.input_image = img1;
         this.input_image2 = img2;
 
         const im1Data = this.getImageData(img1);
         const im2Data = this.getImageData(img2);
 
-        const buf = this.transform.getTransformedImage(
-            im1Data.data,
-            im1Data.height,
+        const buf = this.transform.estimate_transform(
             im2Data.data,
             im2Data.height,
-            "affine",
+            im1Data.data,
+            im1Data.height,
+            transform,
         );
 
+        const H = new Float64Array(
+            buf.buffer,
+            buf.byteOffset,
+            buf.length / Float64Array.BYTES_PER_ELEMENT
+        ).slice();
+
+        const _warped_buf = this.transform.warp_image(
+            im2Data.data,
+            im2Data.height,
+            H,
+            im1Data.height,
+            im1Data.width,
+            transform,
+        )
+
         this.resultData = new ImageData(
-            new Uint8ClampedArray(buf),
+            new Uint8ClampedArray(_warped_buf),
             im1Data.width,
             im1Data.height
         );
