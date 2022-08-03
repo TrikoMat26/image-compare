@@ -1,7 +1,10 @@
-## [Unreleased]
-- Advanced mode to allow users to choose the transformation (identity, similarity, affine, thin plate spline)
+## [WIP]
 - Photometric transform
+- Zoom result using mouse interaction on desktop
 
+## [0.4.0] - 2022-08-03
+- Allow users to choose the transformation (affine, perspective, thin plate spline)
+- Change difference computation implementation to use the canvas compositing instead of WASM
 
 ## [0.3.0] - 2022-03-04
 - Support landscape view mode
