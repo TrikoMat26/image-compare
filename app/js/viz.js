@@ -48,12 +48,49 @@ const copyImage = (_ctx, _img, bbox = null) => {
     }
 };
 
+const debounce = (f, delay=250) => {
+    let timeout = null;
+    return () => {
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+        timeout = setTimeout(f, delay);
+    }
+}
+
+const getImageBounds = (img, cw, ch) => {
+    const iw = img.naturalWidth || img.width;
+    const ih = img.naturalHeight || img.height;
+
+    let rh = 0;
+    let rw = 0;
+    // Get Image and Rendered Canvas Aspect ratio
+    const iar = iw / ih;
+    const ar = cw / ch;
+
+    if (iar < ar) {
+        // Rendered on a wider canvas
+        rh = ch;
+        rw = rh * iar;
+    } else {
+        // Rendered on a taller canvas
+        rw = cw;
+        rh = rw / iar;
+    }
+    return {
+        offset_x: (cw - rw) / 2,
+        offset_y: (ch - rh) / 2,
+        width: rw,
+        height: rh
+    }
+}
+
 class Visualization {
 
     constructor(c, transform) {
         this.c = c;
         this.canvas = c.querySelector("canvas");
-        ;
+        this.primary_colour = getComputedStyle(document.documentElement).getPropertyValue('--mdc-theme-primary') || "#6200ee";
         this.transform = transform;
 
         // Canvas to hold the transformed result
@@ -66,7 +103,7 @@ class Visualization {
         this.dcanvas = document.createElement('canvas');
 
         this.bcanvas.width = this.tcanvas.width = this.dcanvas.width = this.canvas.width;
-        this.bcanvas.height = this.tcanvas.width = this.dcanvas.height = this.canvas.height;
+        this.bcanvas.height = this.tcanvas.height = this.dcanvas.height = this.canvas.height;
 
         this.ctx = this.canvas.getContext('2d');
         this.bctx = this.bcanvas.getContext('2d');
@@ -74,6 +111,60 @@ class Visualization {
         this.dctx = this.dcanvas.getContext('2d');
 
         this.selected_filename_list = [];
+
+        // Internal state
+        this._input_image = null;
+        this._image_bounds = {
+            offset_x: 0,
+            offset_y: 0,
+            width: 0,
+            height: 0,
+        };
+
+        this._identity = {
+            scale: 1.0,
+            tx: 0.0,
+            ty: 0.0
+        };
+        this._current_transform = Object.assign({}, this._identity);
+
+        window.addEventListener('resize', debounce(() => {
+            this._measure_canvas();
+        }));
+    }
+    _measure_canvas() {
+        const { width, height } = this.canvas.getBoundingClientRect();
+        if (this._input_image) {
+            this._image_bounds = getImageBounds(
+                this._input_image,
+                width,
+                height
+            );
+        }
+    }
+
+    get current_transform () {
+        return this._current_transform;
+    }
+
+    set current_transform(val) {
+        this._current_transform = Object.assign({}, val);
+    }
+
+    get width() {
+        return this.canvas.width;
+    }
+
+    get height() {
+        return this.canvas.height;
+    }
+
+    get input_image(){
+        return this._input_image;
+    }
+
+    set input_image(val) {
+        this._input_image = val;
     }
 
     set_filename_list(filename_list) {
@@ -82,7 +173,6 @@ class Visualization {
 
     process(img1, img2, transform) {
         this.input_image = img1;
-        this.input_image2 = img2;
 
         const im1Data = this.getImageData(img1);
         const im2Data = this.getImageData(img2);
@@ -116,13 +206,17 @@ class Visualization {
             im1Data.height
         );
 
-        this.tcanvas.width = this.canvas.width = im1Data.width;
-        this.tcanvas.height = this.canvas.height = im1Data.height;
+        this.tcanvas.width = this.bcanvas.width = this.canvas.width = im1Data.width;
+        this.tcanvas.height = this.bcanvas.height = this.canvas.height = im1Data.height;
         this.tctx.putImageData(this.resultData, 0, 0);
 
         this.canvas.dispatchEvent(new CustomEvent('transform', {
             bubbles: true,
         }));
+
+        window.requestAnimationFrame(() => {
+            this._measure_canvas();
+        })
     }
 
     getImageData (img) {
@@ -186,20 +280,83 @@ class Visualization {
             rh - oh
           );
         }
-      };
+    };
 
-    draw_image(img, clear=false) {
-        if (clear) {
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    draw() {
+        // Zoom
+        const { scale, tx, ty } = this._current_transform;
+        if (scale === 1.0) {
+            // Copy over bcanvas
+            copyImage(this.ctx, this.bcanvas);
+            return;
         }
-        this.ctx.drawImage(
+
+        // Convert mouse to image coordinates
+        const {_image_bounds, width, height, ctx} = this;
+        const { offset_x, offset_y, width: iw, height: ih } = _image_bounds;
+
+        let ix = Math.min(iw, Math.max(0, tx - offset_x));
+        let iy = Math.min(ih, Math.max(0, ty - offset_y));
+        ix *= (width / iw);
+        iy *= (height / ih);
+
+        ix = Math.round(ix);
+        iy = Math.round(iy);
+
+        const zoom_radius = Math.round(0.15 * Math.min(width, height));
+        const scaled_dim = Math.round(zoom_radius / scale);
+
+        // Draw base layer
+        copyImage(this.ctx, this.bcanvas);
+
+        // Create a clipping mask with arc
+        ctx.save();
+
+        ctx.beginPath();
+        ctx.arc(ix, iy, zoom_radius, 0, Math.PI * 2, true);
+        ctx.clip();
+
+        // Draw portion of canvas where mouse is and based on scale
+        // back on canvas
+        ctx.globalCompositeOperation = 'copy';
+        ctx.globalAlpha = 1.0;
+
+        ctx.drawImage(
+            this.bcanvas,
+            ix - scaled_dim,
+            iy - scaled_dim,
+            scaled_dim *2,
+            scaled_dim *2,
+            ix - zoom_radius,
+            iy - zoom_radius,
+            zoom_radius * 2,
+            zoom_radius * 2
+        );
+        ctx.globalCompositeOperation = 'source-over';
+
+        ctx.beginPath();
+        ctx.arc(ix, iy, zoom_radius - 1, 0, Math.PI * 2, true);
+        ctx.strokeStyle = this.primary_colour;
+        ctx.lineWidth = '2';
+        ctx.stroke();
+
+        ctx.restore();
+    }
+
+    _draw_image(img = null, clear=false) {
+        const { width, height } = this.bcanvas;
+        if (clear) {
+            this.bctx.clearRect(0, 0, width, height)
+        }
+        this.bctx.drawImage(
             img, 0, 0, img.naturalWidth || img.width, img.naturalHeight || img.height,
-            0, 0, this.canvas.width, this.canvas.height
-        )
+            0, 0, width, height
+        );
     }
 
     draw_toggle_image(flag = false) {
-        this.draw_image(flag ? this.tcanvas : this.input_image, true);
+        this._draw_image(flag ? this.tcanvas : this.input_image, true);
+        this.draw();
     }
 
     draw_diff_image() {
@@ -209,7 +366,7 @@ class Visualization {
         // 2. https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Compositing
         // 3. https://stackoverflow.com/questions/33822092/greyscale-canvas-make-canvas-color-to-black-and-white
 
-        const { ctx, dctx, dcanvas, input_image, tcanvas } = this;
+        const { bctx, dctx, dcanvas, input_image, tcanvas } = this;
 
         // Copy image
         copyImage(dctx, input_image);
@@ -221,7 +378,7 @@ class Visualization {
         multiplyChannel(dctx, "red");
 
         // Copy it to diff canvas
-        copyImage(ctx, dcanvas);
+        this._draw_image(dcanvas, true);
 
         // copy image2
         copyImage(dctx, tcanvas);
@@ -233,18 +390,22 @@ class Visualization {
         multiplyChannel(dctx, "bg");
 
         // Copy it over diff canvas
-        ctx.save();
-        ctx.globalCompositeOperation = "lighter";
-        ctx.drawImage(dcanvas, 0, 0);
-        ctx.restore();
+        bctx.save();
+        bctx.globalCompositeOperation = "lighter";
+        this._draw_image(dcanvas, false);
+        bctx.restore();
+
+        this.draw();
     }
 
     draw_overlay_image(factor) {
-        this.ctx.save();
-        this.draw_image(this.input_image, true);
-        this.ctx.globalAlpha = factor;
-        this.draw_image(this.tcanvas, false);
-        this.ctx.restore();
+        this.bctx.save();
+        this._draw_image(this.input_image, true);
+        this.bctx.globalAlpha = factor;
+        this._draw_image(this.tcanvas, false);
+        this.bctx.restore();
+
+        this.draw();
     }
 
     toggle_images(speed) {

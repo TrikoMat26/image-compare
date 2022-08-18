@@ -19,7 +19,7 @@ The latest version of Image Compare software application is available at: https:
 See https://www.robots.ox.ac.uk/~vgg/software/image-compare/#usecases which shows the application of Image Compare software for the following:
  - Art Restoration : Identify the changes caused by art restoration process
  - Digital Collation : Compare different editions of the same book and identify variants
- - Photograph : Identify forgery in digital photographs
+ - Photograph : Identify alteration in digital photographs
  - Satellite : Identify changes in satellite imagery
  - Music : Identify variants in music sheet
 

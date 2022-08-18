@@ -1,3 +1,6 @@
+const MIN_ZOOM = 1;
+const MAX_ZOOM = 8;
+
 class Action {
     constructor(container, result) {
         this.c = container;
@@ -40,6 +43,11 @@ class Action {
         this.hover_add = hover_add;
         this.hover_remove = hover_remove;
 
+        const { add_listeners: add_zoom_listener, remove_listeners: remove_zoom_listener } = this.handle_zoom();
+        this.add_zoom_listener = add_zoom_listener;
+        this.remove_zoom_listener = remove_zoom_listener;
+        this.add_zoom_listener();
+
         this.more_menu_el = document.getElementById('more_menu');
         this.info_dialog_el = document.getElementById('info-dialog');
         this.snack_el = document.getElementById('snack');
@@ -64,7 +72,6 @@ class Action {
                 break;
             }
         }.bind(this));
-
     }
 
     get MODE() {
@@ -83,8 +90,11 @@ class Action {
             });
         }
         if(val === 'slide') {
+            this.remove_zoom_listener();
+
             this.image_slider.classList.remove('hide');
         } else {
+            this.add_zoom_listener();
             this.image_slider.classList.add('hide');
         }
 
@@ -239,6 +249,108 @@ class Action {
         this.image_slider.style.left = '50%';
         this.image_slider.style.top = '50%';
         this.SLIDE = 0.5;
+    }
+
+    handle_zoom() {
+        const canvas = this.result.canvas;
+        let scale = 1.0;
+        let x = 0;
+        let y = 0;
+
+        let enabled = false;
+        let mousemove_enabled = false;
+
+        const add_mousemove = () => {
+            if (mousemove_enabled) {
+                return;
+            }
+            canvas.addEventListener('mousemove', onmousemove);
+            mousemove_enabled = true;
+        };
+
+        const remove_mousemove = () => {
+            if (!mousemove_enabled) {
+                return;
+            }
+            canvas.removeEventListener('mousemove', onmousemove);
+            mousemove_enabled = false;
+        };
+        const redraw = (transform = undefined) => {
+            const _scale = transform && transform.scale || scale;
+            if (_scale > 1) {
+                add_mousemove();
+            } else {
+                remove_mousemove();
+            }
+
+            this.result.current_transform = transform || {
+                scale,
+                tx: x,
+                ty: y
+            }
+
+
+            this.result.draw();
+
+        }
+        const onmousewheel = (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            const current_scale = scale;
+            const ox = x;
+            const oy = y;
+
+            scale = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, (scale -  0.005 * e.deltaY)));
+
+            x = e.offsetX;
+            y = e.offsetY;
+
+            if (scale !== current_scale || x !== ox || y !== oy) {
+                redraw();
+            }
+
+        }
+
+        const onmousemove = (e) => {
+            e.preventDefault();
+            const ox = x;
+            const oy = y;
+
+            x = e.offsetX;
+            y = e.offsetY;
+
+            if (x !== ox || y !== oy) {
+                redraw();
+            }
+        }
+
+        const add_listeners = () => {
+            if (enabled) {
+                return;
+            }
+            canvas.addEventListener('wheel', onmousewheel);
+            redraw();
+            enabled = true;
+        }
+
+        const remove_listeners = (reset = true) => {
+            if (!enabled) {
+                return;
+            }
+            if (reset) {
+                scale = 1;
+                x = 0;
+                y = 0;
+            }
+            redraw({scale: 1, tx: 0, ty: 0});
+            canvas.removeEventListener('wheel', onmousewheel);
+            enabled = false;
+        }
+
+        return {
+            add_listeners,
+            remove_listeners
+        }
     }
 
     dragElement(el) {
