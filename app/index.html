@@ -29,31 +29,6 @@
       content="https://robots.ox.ac.uk/~vgg/software/image-compare/res/logo/image-compare-logo.png"
     />
 
-    <!--
-        Development of Image Compare is supported by the EPSRC programme grant
-        Visual AI: An Open World Interpretable Visual Transformer (UKRI Grant EP/T028572/1)
-        Using Google Analytics, we record the usage of this application.
-        This data is used in reporting of this programme grant.
-
-        If you do not wish to share this data, you can safely remove the
-        javascript code below.
-      -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-T47X77WPWN"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("consent", "default", {
-        ad_storage: "denied",
-        analytics_storage: "denied",
-      });
-      gtag("js", new Date());
-      gtag("config", "G-T47X77WPWN", { anonymize_ip: true });
-    </script>
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="apple-touch-icon" href="./images/icons/imcomp-192x192.png" />
 
@@ -279,11 +254,11 @@
       }
 
       .hide {
-        visibility: hidden;
+        visibility: hidden !important;
       }
 
       .gone {
-        display: none;
+        display: none !important;
       }
 
       .ty-100 {
@@ -529,9 +504,59 @@
           display: flex;
         }
       }
+
+      aside.loading_spinner__container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
+        z-index: 1;
+      }
     </style>
 
-    <title>Document</title>
+    <script defer src="js/transform.js"></script>
+    <script
+      src="./deps/material-components-web.min.js"
+      integrity="sha384-8iww5N0HFABAFdwBAcqef8367heaZqV6cGdI2zjVr6ztCVbINoKlnoyYyCvkEtAt"
+      defer
+    ></script>
+    <script defer src="deps/gifshot.js"></script>
+    <script defer src="js/main.js"></script>
+    <script defer src="js/viz.js"></script>
+    <script defer src="js/action.js"></script>
+    <script defer src="js/compare.js"></script>
+    <script defer src="js/samples.js"></script>
+    <!--
+        Development of Image Compare is supported by the EPSRC programme grant
+        Visual AI: An Open World Interpretable Visual Transformer (UKRI Grant EP/T028572/1)
+        Using Google Analytics, we record the usage of this application.
+        This data is used in reporting of this programme grant.
+
+        If you do not wish to share this data, you can safely remove the
+        javascript code below.
+      -->
+
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("consent", "default", {
+        ad_storage: "denied",
+        analytics_storage: "denied",
+      });
+      gtag("js", new Date());
+      gtag("config", "G-T47X77WPWN", { anonymize_ip: true });
+    </script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-T47X77WPWN"
+    ></script>
   </head>
   <body class="mdc-typography">
     <aside id="snack" class="mdc-snackbar" data-mdc-auto-init="MDCSnackbar">
@@ -644,7 +669,103 @@
         accept=".jpg, .jpeg, .png"
         class="gone"
       />
-      <section class="buttons fc f-spaced f-center f-justify-center">
+      <aside class="loading_spinner__container">
+        <div
+          id="loading_spinner"
+          class="mdc-circular-progress mdc-circular-progress--indeterminate"
+          style="width: 48px; height: 48px"
+          role="progressbar"
+          aria-label="Loading"
+          aria-valuemin="0"
+          aria-valuemax="1"
+          data-mdc-auto-init="MDCCircularProgress"
+        >
+          <div class="mdc-circular-progress__determinate-container">
+            <svg
+              class="mdc-circular-progress__determinate-circle-graphic"
+              viewBox="0 0 48 48"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                class="mdc-circular-progress__determinate-track"
+                cx="24"
+                cy="24"
+                r="18"
+                stroke-width="4"
+              />
+              <circle
+                class="mdc-circular-progress__determinate-circle"
+                cx="24"
+                cy="24"
+                r="18"
+                stroke-dasharray="113.097"
+                stroke-dashoffset="113.097"
+                stroke-width="4"
+              />
+            </svg>
+          </div>
+          <div class="mdc-circular-progress__indeterminate-container">
+            <div class="mdc-circular-progress__spinner-layer">
+              <div
+                class="mdc-circular-progress__circle-clipper mdc-circular-progress__circle-left"
+              >
+                <svg
+                  class="mdc-circular-progress__indeterminate-circle-graphic"
+                  viewBox="0 0 48 48"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="18"
+                    stroke-dasharray="113.097"
+                    stroke-dashoffset="56.549"
+                    stroke-width="4"
+                  />
+                </svg>
+              </div>
+              <div class="mdc-circular-progress__gap-patch">
+                <svg
+                  class="mdc-circular-progress__indeterminate-circle-graphic"
+                  viewBox="0 0 48 48"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="18"
+                    stroke-dasharray="113.097"
+                    stroke-dashoffset="56.549"
+                    stroke-width="3.2"
+                  />
+                </svg>
+              </div>
+              <div
+                class="mdc-circular-progress__circle-clipper mdc-circular-progress__circle-right"
+              >
+                <svg
+                  class="mdc-circular-progress__indeterminate-circle-graphic"
+                  viewBox="0 0 48 48"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="18"
+                    stroke-dasharray="113.097"
+                    stroke-dashoffset="56.549"
+                    stroke-width="4"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p style="text-align: center">
+          Setting things up for offline use.<br />Hang tight ...
+        </p>
+      </aside>
+      <section class="buttons hide fc f-spaced f-center f-justify-center">
         <button id="image_select_btn" class="mdc-button mdc-button--raised">
           <span
             class="mdc-button__ripple"
@@ -1380,17 +1501,6 @@
         </div>
       </footer>
     </div>
-    <script
-      src="./deps/material-components-web.min.js"
-      integrity="sha384-8iww5N0HFABAFdwBAcqef8367heaZqV6cGdI2zjVr6ztCVbINoKlnoyYyCvkEtAt"
-    ></script>
-    <script src="deps/gifshot.js"></script>
-    <script src="js/transform.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/viz.js"></script>
-    <script src="js/action.js"></script>
-    <script src="js/compare.js"></script>
-    <script src="js/samples.js"></script>
     <script>
       const snack_el = document.getElementById("snack");
       const main_el = document.getElementById("main");
@@ -1400,6 +1510,13 @@
       const result_el = document.querySelector("#result");
       const dialog_el = document.getElementById("info-dialog");
       const more_menu_el = document.getElementById("more_menu");
+
+      // Loading
+      const loading_spinner_container = main_el.querySelector(
+        "aside.loading_spinner__container"
+      );
+      const loading_spinner = document.getElementById("loading_spinner");
+      const btns_section = main_el.querySelector("section.buttons");
 
       let main, result, compare, samples;
 
@@ -1457,6 +1574,13 @@
 
       window.addEventListener("load", () => {
         window.mdc.autoInit();
+        // Loading spinner
+        loading_spinner.MDCCircularProgress.determinate = true;
+        loading_spinner.MDCCircularProgress.close();
+        loading_spinner_container.classList.add("gone");
+        btns_section.classList.remove("hide");
+
+        // Main stuff
         transform.then((Module) => {
           main = new MainView(main_el, snack_el);
           result = new Visualization(result_el, Module);
