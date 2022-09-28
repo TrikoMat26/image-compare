@@ -59,6 +59,7 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="apple-touch-icon" href="./images/icons/imcomp-192x192.png" />
 
+    <!-- Preloading -->
     <link
       rel="preload"
       href="./deps/material-components-web.min.css"
@@ -73,6 +74,11 @@
       type="text/javascript"
       integrity="sha384-8iww5N0HFABAFdwBAcqef8367heaZqV6cGdI2zjVr6ztCVbINoKlnoyYyCvkEtAt"
     />
+    <link
+      rel="preload"
+      href="images/logo/imcomp-logo-large-path.svg"
+      as="image"
+    />
 
     <!-- Required styles for Material Web -->
     <link
@@ -80,6 +86,26 @@
       href="./deps/material-components-web.min.css"
       integrity="sha384-zYyxh4r8CWy0xvG1ua+/rTeQmFY/YhmqzzaqluuGnN9+fCFSj/jF1AwiW9p+KUW/"
     />
+    <script>
+      const show_onboarding =
+        window.localStorage.getItem("show_onboarding") || "true";
+
+      if (show_onboarding === "true") {
+        const gif_link_1 = document.createElement("link");
+        gif_link_1.href = "images/churchill.gif";
+        gif_link_1.rel = "preload";
+        gif_link_1.as = "image";
+
+        const gif_link_2 = document.createElement("link");
+        gif_link_2.href = "images/output.gif";
+        gif_link_2.rel = "preload";
+        gif_link_2.as = "image";
+
+        document.head.appendChild(gif_link_1);
+        document.head.appendChild(gif_link_2);
+      }
+    </script>
+
     <style>
       * {
         box-sizing: border-box;
@@ -513,25 +539,6 @@
         margin-left: 1em;
       }
 
-      @media screen and (min-aspect-ratio: 11 / 10) {
-        #compare_container > .vertical-image-list {
-          display: flex;
-          flex-flow: row nowrap;
-          align-items: flex-end;
-        }
-        #compare_container > .vertical-image-list > li {
-          height: 100%;
-        }
-      }
-      @media screen and (min-height: 512px) {
-        #compare_container {
-          grid-template-rows: min(128px, max(20vh, 64px)) minmax(0, 1fr) auto;
-        }
-        #compare_container > .horizontal-image-list {
-          display: flex;
-        }
-      }
-
       aside.loading_spinner__container {
         position: absolute;
         top: 0;
@@ -543,6 +550,67 @@
         justify-content: center;
         align-items: center;
         z-index: 1;
+      }
+
+      #ob-dialog-content {
+        display: grid;
+        grid-template-rows: 100%;
+        grid-template-columns: 100% 100% 100%;
+        padding: 0;
+      }
+      .onboarding__screen {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        padding: 12px 0;
+        margin: 0 12px;
+      }
+      .onboarding__header {
+        flex: 0 0 5rem;
+      }
+      .onboarding__content {
+        flex: 1 1 auto;
+        min-height: 0;
+        min-width: 0;
+        max-height: 100%;
+        max-width: 100%;
+        display: flex;
+        flex-flow: column nowrap;
+        margin-top: 1rem;
+
+        /* padding-bottom: min(max(0px, 10vh), 48px); */
+      }
+      .onboarding__content > :last-child {
+        margin: auto 0;
+      }
+
+      @media screen and (min-aspect-ratio: 11 / 10) {
+        #compare_container > .vertical-image-list {
+          display: flex;
+          flex-flow: row nowrap;
+          align-items: flex-end;
+        }
+        #compare_container > .vertical-image-list > li {
+          height: 100%;
+        }
+        .onboarding__content {
+          flex-flow: row nowrap;
+        }
+        .onboarding__content > :first-child {
+          flex: 0 0 60%;
+          order: 2;
+        }
+        .onboarding__content > :last-child {
+          margin: 0 auto;
+        }
+      }
+      @media screen and (min-height: 512px) {
+        #compare_container {
+          grid-template-rows: min(128px, max(20vh, 64px)) minmax(0, 1fr) auto;
+        }
+        #compare_container > .horizontal-image-list {
+          display: flex;
+        }
       }
     </style>
 
@@ -560,6 +628,170 @@
     <script defer src="js/samples.js"></script>
   </head>
   <body class="mdc-typography">
+    <div
+      id="onboarding"
+      class="mdc-dialog mdc-dialog--fullscreen"
+      data-mdc-auto-init="MDCDialog"
+    >
+      <div class="mdc-dialog__container">
+        <div
+          class="mdc-dialog__surface"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Image Compare"
+          aria-describedby="ob-dialog-content"
+          style="max-height: 100%; max-width: 768px"
+        >
+          <div
+            class="mdc-dialog__content"
+            id="ob-dialog-content"
+            style="overflow: hidden"
+          >
+            <div class="onboarding__screen">
+              <div class="onboarding__header">
+                <section class="fc f-center f-justify-center h-100">
+                  <img
+                    style="
+                      max-width: 100%;
+                      height: auto;
+                      min-height: 64px;
+                      object-fit: contain;
+                    "
+                    src="images/logo/imcomp-logo-large-path.svg"
+                    alt="logo goes here"
+                  />
+                  <div style="line-height: 0"></div>
+                </section>
+              </div>
+              <div class="onboarding__content">
+                <div class="fc f-center f-justify-center">
+                  <span
+                    class="mdc-typography--overline"
+                    style="text-align: center; line-height: 1.25rem"
+                    >Spot the differences between 2 images <br /><em
+                      >in a blink!</em
+                    ></span
+                  >
+                </div>
+                <div
+                  class="fr f-center f-justify-center"
+                  style="min-height: 0; min-width: 0"
+                >
+                  <img
+                    style="
+                      max-height: 100%;
+                      max-width: 100%;
+                      object-fit: contain;
+                      border-radius: 16px;
+                    "
+                    src="images/churchill.gif"
+                    alt="churchill altered photo comparison result"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="onboarding__screen">
+              <div class="onboarding__header">
+                <section class="fc f-center f-justify-center h-100">
+                  <span
+                    class="mdc-typography--headline4"
+                    style="text-align: center; color: black"
+                    >AUTO-MAGIC ALIGNMENT</span
+                  >
+                </section>
+              </div>
+              <div class="onboarding__content">
+                <div class="fc f-center f-justify-center">
+                  <span
+                    class="mdc-typography--body2"
+                    style="text-align: center; line-height: 1.25rem"
+                    >Select the 2 images you would like to compare and leave the
+                    rest to us! <br />
+                    <br />We will align the images and help you visualise the
+                    differences. Automagically!
+                  </span>
+                </div>
+                <div
+                  class="fr f-center f-justify-center"
+                  style="min-height: 0; min-width: 0"
+                >
+                  <img
+                    style="
+                      max-height: 100%;
+                      max-width: 100%;
+                      object-fit: contain;
+                      border-radius: 16px;
+                    "
+                    src="images/output.gif"
+                    alt="churchill altered photo comparison result"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="onboarding__screen">
+              <div class="onboarding__header">
+                <section class="fc f-center f-justify-center h-100">
+                  <span
+                    class="mdc-typography--headline4"
+                    style="text-align: center; color: black"
+                    >PRIVATE & SECURE
+                  </span>
+                </section>
+              </div>
+              <div class="onboarding__content">
+                <div class="fc f-center f-justify-center">
+                  <span
+                    class="mdc-typography--body2"
+                    style="text-align: center; line-height: 1.25rem"
+                    >Your images will not be uploaded anywhere! <br />
+                    <br />All the magic is done right here, in your device.
+                    Offline.
+                  </span>
+                </div>
+                <div
+                  class="fr f-center f-justify-center"
+                  style="min-height: 0; min-width: 0"
+                >
+                  <span
+                    class="material-icons"
+                    style="
+                      font-size: min(max(2rem, 20vh), 10rem);
+                      padding: 4rem;
+                      color: rgb(0, 180, 0);
+                    "
+                  >
+                    verified_user
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mdc-dialog__actions" style="padding: 0 24px 24px 24px">
+            <div class="fr f-center w-100">
+              <button
+                type="button"
+                style="flex: 0 0 128px"
+                class="mdc-button mdc-button--outlined hide"
+              >
+                <div class="mdc-button__ripple"></div>
+                <span class="mdc-button__label">PREVIOUS</span>
+              </button>
+              <div style="margin: 0 auto"></div>
+              <button
+                type="button"
+                style="flex: 0 0 128px"
+                class="mdc-button mdc-button--raised"
+              >
+                <div class="mdc-button__ripple"></div>
+                <span class="mdc-button__label">NEXT</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mdc-dialog__scrim"></div>
+    </div>
+
     <aside id="snack" class="mdc-snackbar" data-mdc-auto-init="MDCSnackbar">
       <div
         class="mdc-snackbar__surface"
@@ -601,7 +833,7 @@
                   class="info-dialog__content--section mdc-typography--caption mdc-theme--text-secondary-on-background"
                 >
                   <p class="mdc-typography--subtitle1">Version</p>
-                  <p>0.4.0 (Aug 3, 2022)</p>
+                  <p>0.4.0 (Sep 28, 2022)</p>
                 </div>
                 <div
                   class="info-dialog__content--section mdc-typography--caption mdc-theme--text-secondary-on-background"
@@ -857,7 +1089,101 @@
         <div class="mdc-dialog__scrim"></div>
       </div>
     </aside>
-    <div id="main" class="h-100">
+    <aside class="loading_spinner__container">
+      <div
+        id="loading_spinner"
+        class="mdc-circular-progress mdc-circular-progress--indeterminate"
+        style="width: 48px; height: 48px"
+        role="progressbar"
+        aria-label="Loading"
+        aria-valuemin="0"
+        aria-valuemax="1"
+        data-mdc-auto-init="MDCCircularProgress"
+      >
+        <div class="mdc-circular-progress__determinate-container">
+          <svg
+            class="mdc-circular-progress__determinate-circle-graphic"
+            viewBox="0 0 48 48"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              class="mdc-circular-progress__determinate-track"
+              cx="24"
+              cy="24"
+              r="18"
+              stroke-width="4"
+            />
+            <circle
+              class="mdc-circular-progress__determinate-circle"
+              cx="24"
+              cy="24"
+              r="18"
+              stroke-dasharray="113.097"
+              stroke-dashoffset="113.097"
+              stroke-width="4"
+            />
+          </svg>
+        </div>
+        <div class="mdc-circular-progress__indeterminate-container">
+          <div class="mdc-circular-progress__spinner-layer">
+            <div
+              class="mdc-circular-progress__circle-clipper mdc-circular-progress__circle-left"
+            >
+              <svg
+                class="mdc-circular-progress__indeterminate-circle-graphic"
+                viewBox="0 0 48 48"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="24"
+                  cy="24"
+                  r="18"
+                  stroke-dasharray="113.097"
+                  stroke-dashoffset="56.549"
+                  stroke-width="4"
+                />
+              </svg>
+            </div>
+            <div class="mdc-circular-progress__gap-patch">
+              <svg
+                class="mdc-circular-progress__indeterminate-circle-graphic"
+                viewBox="0 0 48 48"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="24"
+                  cy="24"
+                  r="18"
+                  stroke-dasharray="113.097"
+                  stroke-dashoffset="56.549"
+                  stroke-width="3.2"
+                />
+              </svg>
+            </div>
+            <div
+              class="mdc-circular-progress__circle-clipper mdc-circular-progress__circle-right"
+            >
+              <svg
+                class="mdc-circular-progress__indeterminate-circle-graphic"
+                viewBox="0 0 48 48"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="24"
+                  cy="24"
+                  r="18"
+                  stroke-dasharray="113.097"
+                  stroke-dashoffset="56.549"
+                  stroke-width="4"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style="text-align: center">Setting things up. Hang tight ...</p>
+    </aside>
+    <div id="main" class="hide h-100">
       <section class="logo w-100 fc f-center f-justify-center">
         <img
           src="images/logo/imcomp-logo-large-path.svg"
@@ -878,102 +1204,7 @@
         accept=".jpg, .jpeg, .png"
         class="gone"
       />
-      <aside class="loading_spinner__container">
-        <div
-          id="loading_spinner"
-          class="mdc-circular-progress mdc-circular-progress--indeterminate"
-          style="width: 48px; height: 48px"
-          role="progressbar"
-          aria-label="Loading"
-          aria-valuemin="0"
-          aria-valuemax="1"
-          data-mdc-auto-init="MDCCircularProgress"
-        >
-          <div class="mdc-circular-progress__determinate-container">
-            <svg
-              class="mdc-circular-progress__determinate-circle-graphic"
-              viewBox="0 0 48 48"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle
-                class="mdc-circular-progress__determinate-track"
-                cx="24"
-                cy="24"
-                r="18"
-                stroke-width="4"
-              />
-              <circle
-                class="mdc-circular-progress__determinate-circle"
-                cx="24"
-                cy="24"
-                r="18"
-                stroke-dasharray="113.097"
-                stroke-dashoffset="113.097"
-                stroke-width="4"
-              />
-            </svg>
-          </div>
-          <div class="mdc-circular-progress__indeterminate-container">
-            <div class="mdc-circular-progress__spinner-layer">
-              <div
-                class="mdc-circular-progress__circle-clipper mdc-circular-progress__circle-left"
-              >
-                <svg
-                  class="mdc-circular-progress__indeterminate-circle-graphic"
-                  viewBox="0 0 48 48"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle
-                    cx="24"
-                    cy="24"
-                    r="18"
-                    stroke-dasharray="113.097"
-                    stroke-dashoffset="56.549"
-                    stroke-width="4"
-                  />
-                </svg>
-              </div>
-              <div class="mdc-circular-progress__gap-patch">
-                <svg
-                  class="mdc-circular-progress__indeterminate-circle-graphic"
-                  viewBox="0 0 48 48"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle
-                    cx="24"
-                    cy="24"
-                    r="18"
-                    stroke-dasharray="113.097"
-                    stroke-dashoffset="56.549"
-                    stroke-width="3.2"
-                  />
-                </svg>
-              </div>
-              <div
-                class="mdc-circular-progress__circle-clipper mdc-circular-progress__circle-right"
-              >
-                <svg
-                  class="mdc-circular-progress__indeterminate-circle-graphic"
-                  viewBox="0 0 48 48"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle
-                    cx="24"
-                    cy="24"
-                    r="18"
-                    stroke-dasharray="113.097"
-                    stroke-dashoffset="56.549"
-                    stroke-width="4"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p style="text-align: center">
-          Setting things up for offline use.<br />Hang tight ...
-        </p>
-      </aside>
+
       <section class="buttons hide fc f-spaced f-center f-justify-center">
         <button id="image_select_btn" class="mdc-button mdc-button--raised">
           <span
@@ -1725,6 +1956,7 @@
       </footer>
     </div>
     <script>
+      // Elements of interest
       const snack_el = document.getElementById("snack");
       const main_el = document.getElementById("main");
       const compare_el = document.getElementById("compare_screen");
@@ -1739,13 +1971,125 @@
       const hiw_dialog_el = document.getElementById("how_it_works");
 
       // Loading
-      const loading_spinner_container = main_el.querySelector(
+      const loading_spinner_container = document.querySelector(
         "aside.loading_spinner__container"
       );
       const loading_spinner = document.getElementById("loading_spinner");
       const btns_section = main_el.querySelector("section.buttons");
 
+      // Onboarding
+      const onboarding_dialog = document.getElementById("onboarding");
+    </script>
+    <script>
+      // Wire up on boarding screen
+      const onboarding_screens = [
+        ...onboarding_dialog.querySelectorAll(".onboarding__screen"),
+      ];
+      const [previous_btn, next_btn] = onboarding_dialog.querySelectorAll(
+        ".mdc-dialog__actions button"
+      );
+      const animation_img = onboarding_screens[1].querySelector("img");
+      const [previous_btn_label, next_btn_label] =
+        onboarding_dialog.querySelectorAll(".mdc-button__label");
+
+      const update_page = (current_page, next_page) => {
+        if (current_page === onboarding_screens.length - 1 && next_page === 0) {
+          // Last page and pressed got it
+          window.localStorage.setItem("show_onboarding", "false");
+          main_el.classList.remove("hide");
+          onboarding_dialog.MDCDialog.close();
+        }
+        if (next_page === 0) {
+          previous_btn.classList.add("hide");
+        } else {
+          previous_btn.classList.remove("hide");
+        }
+        if (next_page === 1) {
+          // Reload gif
+          animation_img.src = animation_img.src;
+        }
+
+        if (next_page === onboarding_screens.length - 1) {
+          next_btn_label.textContent = "GOT IT!";
+        } else {
+          next_btn_label.textContent = "NEXT";
+        }
+
+        onboarding_screens[next_page].scrollIntoView({
+          behavior: "smooth",
+          inline: "center",
+        });
+
+        return next_page;
+      };
+      let current_page = 0;
+      next_btn.onclick = () => {
+        const next_page = (current_page + 1) % onboarding_screens.length;
+        current_page = update_page(current_page, next_page);
+      };
+
+      previous_btn.onclick = () => {
+        const next_page = (current_page - 1) % onboarding_screens.length;
+        current_page = update_page(current_page, next_page);
+      };
+      update_page(0, 0);
+    </script>
+    <script>
       let main, result, compare, samples;
+
+      window.addEventListener("load", () => {
+        window.mdc.autoInit();
+
+        // Onboarding
+        if (show_onboarding) {
+          onboarding_dialog.MDCDialog.open();
+        } else {
+          main_el.classList.remove("hide");
+        }
+
+        // How it works btn
+        hiw_btn.onclick = () => {
+          hiw_dialog_el.MDCDialog.open();
+        };
+
+        // Loading spinner
+        loading_spinner.MDCCircularProgress.determinate = true;
+        loading_spinner.MDCCircularProgress.close();
+        loading_spinner_container.classList.add("gone");
+        btns_section.classList.remove("hide");
+
+        // Main stuff
+        transform.then((Module) => {
+          main = new MainView(main_el, snack_el);
+          result = new Visualization(result_el, Module);
+          action_bar = new Action(action_el, result);
+          compare = new Compare(compare_el, result, action_bar);
+          samples = new Samples(samples_el);
+
+          main.c.addEventListener("select_image", (e) => {
+            compare.set_image(e.detail.urls);
+            compare.set_filename(e.detail.selected_filename_list);
+            compare.show_compare_screen();
+          });
+
+          main.c.addEventListener("samples", () => {
+            samples.show();
+          });
+
+          compare.c.addEventListener("back", () => {
+            main.c.scrollIntoView({ behavior: "smooth" });
+          });
+
+          compare.c.addEventListener("more", () => {
+            more_menu_el.MDCMenu.open = true;
+          });
+
+          samples.c.addEventListener("select_sample", (e) => {
+            compare.set_image(e.detail.image_sources);
+            compare.show_compare_screen();
+          });
+        });
+      });
 
       // register service worker
       window.addEventListener("load", () => {
@@ -1797,53 +2141,6 @@
             refreshing = true;
           }
         );
-      });
-
-      window.addEventListener("load", () => {
-        window.mdc.autoInit();
-
-        // How it works btn
-        hiw_btn.onclick = () => {
-          hiw_dialog_el.MDCDialog.open();
-        };
-
-        // Loading spinner
-        loading_spinner.MDCCircularProgress.determinate = true;
-        loading_spinner.MDCCircularProgress.close();
-        loading_spinner_container.classList.add("gone");
-        btns_section.classList.remove("hide");
-
-        // Main stuff
-        transform.then((Module) => {
-          main = new MainView(main_el, snack_el);
-          result = new Visualization(result_el, Module);
-          action_bar = new Action(action_el, result);
-          compare = new Compare(compare_el, result, action_bar);
-          samples = new Samples(samples_el);
-
-          main.c.addEventListener("select_image", (e) => {
-            compare.set_image(e.detail.urls);
-            compare.set_filename(e.detail.selected_filename_list);
-            compare.show_compare_screen();
-          });
-
-          main.c.addEventListener("samples", () => {
-            samples.show();
-          });
-
-          compare.c.addEventListener("back", () => {
-            main.c.scrollIntoView({ behavior: "smooth" });
-          });
-
-          compare.c.addEventListener("more", () => {
-            more_menu_el.MDCMenu.open = true;
-          });
-
-          samples.c.addEventListener("select_sample", (e) => {
-            compare.set_image(e.detail.image_sources);
-            compare.show_compare_screen();
-          });
-        });
       });
     </script>
   </body>
