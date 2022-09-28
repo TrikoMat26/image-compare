@@ -1,9 +1,11 @@
 ## [WIP]
 - Photometric transform
-- Zoom result using mouse interaction on desktop
+- WebGL for faster computation and to remove the 1024px limit on resolution.
 
-## [0.4.0] - 2022-08-03
+## [0.4.0] - 2022-09-28
 - Allow users to choose the transformation (affine, perspective, thin plate spline)
+- Add onboarding screens to explain the app before users start using it with help text for what images work / don't work
+- Desktop users can zoom on the result using Mouse scroll wheel. Touchscreen users can pinch to zoom directly
 - Change difference computation implementation to use the canvas compositing instead of WASM
 
 ## [0.3.0] - 2022-03-04
