@@ -2041,7 +2041,7 @@
         window.mdc.autoInit();
 
         // Onboarding
-        if (show_onboarding) {
+        if (show_onboarding === "true") {
           onboarding_dialog.MDCDialog.open();
         } else {
           main_el.classList.remove("hide");
