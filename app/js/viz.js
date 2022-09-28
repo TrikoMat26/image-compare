@@ -303,7 +303,7 @@ class Visualization {
         ix = Math.round(ix);
         iy = Math.round(iy);
 
-        const zoom_radius = Math.round(0.15 * Math.min(width, height));
+        const zoom_radius = Math.round(0.30 * Math.min(width, height));
         const scaled_dim = Math.round(zoom_radius / scale);
 
         // Draw base layer
