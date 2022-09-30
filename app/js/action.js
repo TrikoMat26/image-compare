@@ -295,7 +295,6 @@ class Action {
         }
         const onmousewheel = (e) => {
             e.stopPropagation();
-            e.preventDefault();
             const current_scale = scale;
             const ox = x;
             const oy = y;
