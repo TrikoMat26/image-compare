@@ -328,7 +328,7 @@ class Action {
             if (enabled) {
                 return;
             }
-            canvas.addEventListener('wheel', onmousewheel);
+            canvas.addEventListener('wheel', onmousewheel, {passive: true});
             redraw();
             enabled = true;
         }
@@ -343,7 +343,7 @@ class Action {
                 y = 0;
             }
             redraw({scale: 1, tx: 0, ty: 0});
-            canvas.removeEventListener('wheel', onmousewheel);
+            canvas.removeEventListener('wheel', onmousewheel, {passive: true});
             enabled = false;
         }
 
