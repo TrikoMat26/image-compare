@@ -2,7 +2,7 @@
 - Photometric transform
 - WebGL for faster computation and to remove the 1024px limit on resolution.
 
-## [0.4.0] - 2022-09-28
+## [0.4.0] - 2022-09-30
 - Allow users to choose the transformation (affine, perspective, thin plate spline)
 - Add onboarding screens to explain the app before users start using it with help text for what images work / don't work
 - Desktop users can zoom on the result using Mouse scroll wheel. Touchscreen users can pinch to zoom directly
