@@ -2050,6 +2050,8 @@
 
         // Onboarding
         if (show_onboarding === "true") {
+          onboarding_dialog.MDCDialog.scrimClickAction = "";
+          onboarding_dialog.MDCDialog.escapeKeyAction = "";
           onboarding_dialog.MDCDialog.open();
         } else {
           main_el.classList.remove("hide");
