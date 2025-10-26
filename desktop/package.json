@@ -1,0 +1,48 @@
+{
+  "name": "image-compare-desktop",
+  "version": "1.0.0",
+  "description": "Electron wrapper that packages the Image Compare web app into a standalone Windows executable.",
+  "main": "main.js",
+  "author": "Visual Geometry Group, University of Oxford",
+  "license": "BSD-2-Clause",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "^28.2.0",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "uk.ac.oxford.vgg.image-compare",
+    "productName": "Image Compare",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      {
+        "from": "../app",
+        "to": "app",
+        "filter": ["**/*"]
+      }
+    ],
+    "asar": false,
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "icon.ico",
+      "artifactName": "${productName}-${version}-win-${arch}.${ext}"
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-portable.exe"
+    }
+  }
+}
