@@ -1894,6 +1894,28 @@
                 tabindex="-1"
               >
                 <li
+                  class="mdc-deprecated-list-item"
+                  role="menuitemcheckbox"
+                  aria-checked="false"
+                  data-name="precision_mode"
+                >
+                  <span class="mdc-deprecated-list-item__ripple"></span>
+                  <span
+                    class="mdc-deprecated-list-item__graphic mdc-menu__selection-group-icon material-icons"
+                    aria-hidden="true"
+                    >high_quality</span
+                  >
+                  <span class="mdc-deprecated-list-item__text"
+                    >High Precision (native resolution)</span
+                  >
+                  <span
+                    class="mdc-deprecated-list-item__meta material-icons hide"
+                    aria-hidden="true"
+                    >check</span
+                  >
+                </li>
+                <li class="mdc-list-divider" role="separator"></li>
+                <li
                   class="mdc-deprecated-list-item mdc-deprecated-list-item--disabled"
                   role="menuitem"
                   data-name="export_aligned_images"
@@ -2067,6 +2089,7 @@
           result = new Visualization(result_el, Module);
           action_bar = new Action(action_el, result);
           compare = new Compare(compare_el, result, action_bar);
+          action_bar.setCompare(compare);
           samples = new Samples(samples_el);
 
           main.c.addEventListener("select_image", (e) => {

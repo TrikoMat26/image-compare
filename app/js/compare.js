@@ -36,23 +36,10 @@ class Compare {
         this.more_menu_el = document.getElementById('more_menu');
 
         this.input = document.getElementById('image_select_input2');
-        const process_images = (function(){
-            const v_imgs = this.v_image_list.querySelectorAll('img');
-            if(this.selected_filename_list.length) {
-                const selected_filename_list = this.selected_filename_list;
-                this.result.set_filename_list(selected_filename_list);
-            }
-            this.result.process(...v_imgs, this.current_transform);
-        }).bind(this);
 
         this.compare_btn.onclick = () => {
-            this.compare_label.textContent = 'Processing ...'
-            this.compare_btn.disabled = true;
-
-            window.requestAnimationFrame(() => {
-                window.requestAnimationFrame(process_images)
-            })
-        }
+            this.requestProcess();
+        };
 
         this.c.addEventListener('transform', () => {
             var li = this.more_menu_el.querySelectorAll('.mdc-deprecated-list-item--disabled');
@@ -63,6 +50,10 @@ class Compare {
             this.show_result_screen();
             this.compare_label.textContent = 'Compare';
             this.compare_btn.disabled = false;
+
+            if (this.action_bar && typeof this.action_bar.notifyProcessingMeta === 'function') {
+                this.action_bar.notifyProcessingMeta(this.result.getLastProcessingMeta());
+            }
         });
 
         this.c.addEventListener('MDCSelect:change', ({detail: {value}, target}) => {
@@ -112,6 +103,55 @@ class Compare {
 
     set_filename (filename_list) {
         this.selected_filename_list = filename_list;
+    }
+
+    requestProcess() {
+        if (!this.compare_btn.disabled) {
+            this.compare_label.textContent = 'Processing ...';
+            this.compare_btn.disabled = true;
+        }
+
+        window.requestAnimationFrame(() => {
+            window.requestAnimationFrame(() => this.processImages());
+        });
+    }
+
+    processImages() {
+        const v_imgs = this.v_image_list.querySelectorAll('img');
+        if (v_imgs.length < 2) {
+            this.handleProcessingError(new Error('Please select two images.'));
+            return;
+        }
+
+        if (this.selected_filename_list.length) {
+            const selected_filename_list = this.selected_filename_list;
+            this.result.set_filename_list(selected_filename_list);
+        }
+
+        try {
+            this.result.process(...v_imgs, this.current_transform);
+        } catch (err) {
+            this.handleProcessingError(err);
+        }
+    }
+
+    handleProcessingError(err) {
+        this.compare_label.textContent = 'Compare';
+        this.compare_btn.disabled = false;
+
+        if (this.action_bar && typeof this.action_bar.showError === 'function') {
+            let message = 'Failed to compute comparison.';
+            if (err && err.message) {
+                message = err.message;
+            }
+            if (message && /memory/i.test(message)) {
+                message = 'Not enough memory to compare at full resolution. Try disabling high precision or reducing image size.';
+            }
+            this.action_bar.showError(message);
+        }
+        if (err) {
+            console.error(err);
+        }
     }
 
     set_image (images, index = -1) {

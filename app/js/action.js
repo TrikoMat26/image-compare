@@ -1,5 +1,6 @@
 const MIN_ZOOM = 1;
-const MAX_ZOOM = 8;
+const MAX_ZOOM = 32;
+const ZOOM_SENSITIVITY = 1.0025;
 
 class Action {
     constructor(container, result) {
@@ -51,6 +52,8 @@ class Action {
         this.more_menu_el = document.getElementById('more_menu');
         this.info_dialog_el = document.getElementById('info-dialog');
         this.snack_el = document.getElementById('snack');
+        this.precision_menu_item = this.more_menu_el.querySelector('[data-name="precision_mode"]');
+        this.precision_meta_icon = this.precision_menu_item && this.precision_menu_item.querySelector('.mdc-deprecated-list-item__meta');
 
         this.more_menu_el.addEventListener('MDCMenu:selected', function(e) {
             const menu_item_name = e.detail.item.dataset.name;
@@ -60,6 +63,9 @@ class Action {
                 break;
             case 'export_toggle':
                 this.export_gif();
+                break;
+            case 'precision_mode':
+                this.handle_precision_toggle();
                 break;
             case 'licenses':
                 this.download_el.href = 'licenses.txt';
@@ -72,6 +78,8 @@ class Action {
                 break;
             }
         }.bind(this));
+
+        this.updatePrecisionMenu();
     }
 
     get MODE() {
@@ -148,6 +156,93 @@ class Action {
     set HOVER(val) {
         this._HOVER = val;
         this.show();
+    }
+
+    setCompare(compare) {
+        this.compare = compare;
+        this.updatePrecisionMenu();
+    }
+
+    updatePrecisionMenu() {
+        if (!this.precision_menu_item) {
+            return;
+        }
+        const enabled = this.result.isHighPrecisionEnabled();
+        this.precision_menu_item.setAttribute('aria-checked', enabled ? 'true' : 'false');
+        this.precision_menu_item.classList.toggle('mdc-deprecated-list-item--selected', enabled);
+        if (this.precision_meta_icon) {
+            this.precision_meta_icon.classList.toggle('hide', !enabled);
+        }
+    }
+
+    showSnack(message, timeout = 4000) {
+        if (!this.snack_el || !this.snack_el.MDCSnackbar) {
+            console.info(message);
+            return;
+        }
+        this.snack_el.MDCSnackbar.labelText = message;
+        this.snack_el.MDCSnackbar.timeoutMs = timeout;
+        this.snack_el.MDCSnackbar.open();
+    }
+
+    showError(message) {
+        this.showSnack(message, 6000);
+    }
+
+    notifyProcessingMeta(meta) {
+        if (!meta) {
+            return;
+        }
+
+        const messageParts = [];
+        const describe = (input) => `${input.processedWidth}×${input.processedHeight}`;
+        const naturalDescribe = (input) => `${input.naturalWidth}×${input.naturalHeight}`;
+        const downscaled = meta.first.scale < 1 || meta.second.scale < 1;
+
+        if (meta.highPrecision && !downscaled) {
+            messageParts.push(`High precision mode active (${naturalDescribe(meta.first)}).`);
+        } else if (meta.highPrecision && downscaled) {
+            messageParts.push(`High precision requested, but the images were resized to ${describe(meta.first)} to stay within memory limits.`);
+        } else if (!meta.highPrecision && downscaled) {
+            messageParts.push(`Balanced mode: processed images at ${describe(meta.first)}.`);
+        } else {
+            messageParts.push(`Balanced mode using full resolution (${naturalDescribe(meta.first)}).`);
+        }
+
+        this.showSnack(messageParts.join(' '), 6000);
+    }
+
+    handle_precision_toggle() {
+        const nextState = !this.result.isHighPrecisionEnabled();
+        const changed = this.result.setHighPrecision(nextState);
+        this.updatePrecisionMenu();
+
+        if (nextState) {
+            this.showSnack('High precision mode enabled – recalculating...', 5000);
+        } else {
+            this.showSnack('High precision mode disabled.', 4000);
+        }
+
+        if (!changed) {
+            // Nothing else to do
+            return;
+        }
+
+        const rerun = () => {
+            if (this.compare) {
+                this.compare.requestProcess();
+            } else {
+                try {
+                    this.result.reprocess();
+                } catch (err) {
+                    this.showError('Unable to recompute the comparison in high precision mode.');
+                    console.error(err);
+                }
+            }
+        };
+
+        // Defer to allow the menu to close smoothly
+        window.requestAnimationFrame(rerun);
     }
 
     _draw() {
@@ -299,7 +394,9 @@ class Action {
             const ox = x;
             const oy = y;
 
-            scale = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, (scale -  0.005 * e.deltaY)));
+            const direction = -e.deltaY;
+            const factor = Math.pow(ZOOM_SENSITIVITY, direction);
+            scale = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, scale * factor));
 
             x = e.offsetX;
             y = e.offsetY;

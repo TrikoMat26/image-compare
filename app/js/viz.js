@@ -1,4 +1,5 @@
-const MAX_DIM = 1024;
+const MAX_CANVAS_PIXELS = 25 * 1024 * 1024; // ~25 MP to keep memory usage reasonable
+const PRECISION_STORAGE_KEY = 'image-compare-high-precision';
 
 const COLOR_CHANNELS = {
     red: "#F00",
@@ -112,6 +113,22 @@ class Visualization {
 
         this.selected_filename_list = [];
 
+        this._max_canvas_pixels = MAX_CANVAS_PIXELS;
+        this._high_precision = false;
+        this._last_process_args = null;
+        this._last_processing_meta = null;
+
+        if (typeof window !== "undefined" && window.localStorage) {
+            try {
+                const stored = window.localStorage.getItem(PRECISION_STORAGE_KEY);
+                if (stored !== null) {
+                    this._high_precision = stored === "true";
+                }
+            } catch (err) {
+                // Ignore storage errors (private mode, etc.)
+            }
+        }
+
         // Internal state
         this._input_image = null;
         this._image_bounds = {
@@ -171,11 +188,58 @@ class Visualization {
         this.selected_filename_list = filename_list;
     }
 
+    isHighPrecisionEnabled() {
+        return this._high_precision;
+    }
+
+    setHighPrecision(enabled) {
+        const next = Boolean(enabled);
+        if (next === this._high_precision) {
+            return false;
+        }
+        this._high_precision = next;
+        if (typeof window !== "undefined" && window.localStorage) {
+            try {
+                window.localStorage.setItem(
+                    PRECISION_STORAGE_KEY,
+                    next ? "true" : "false"
+                );
+            } catch (err) {
+                // Ignore storage write failures
+            }
+        }
+        return true;
+    }
+
+    getLastProcessingMeta() {
+        return this._last_processing_meta;
+    }
+
+    reprocess() {
+        if (!this._last_process_args) {
+            return false;
+        }
+        const { img1, img2, transform } = this._last_process_args;
+        this.process(img1, img2, transform);
+        return true;
+    }
+
     process(img1, img2, transform) {
         this.input_image = img1;
 
-        const im1Data = this.getImageData(img1);
-        const im2Data = this.getImageData(img2);
+        const im1 = this.getImageData(img1);
+        const im2 = this.getImageData(img2);
+
+        const im1Data = im1.imageData;
+        const im2Data = im2.imageData;
+
+        this._last_process_args = { img1, img2, transform };
+        this._last_processing_meta = {
+            highPrecision: this._high_precision,
+            limitPixels: this._high_precision ? Infinity : this._max_canvas_pixels,
+            first: im1.meta,
+            second: im2.meta,
+        };
 
         const buf = this.transform.estimate_transform(
             im2Data.data,
@@ -225,20 +289,32 @@ class Visualization {
         const iw = img.naturalWidth,
             ih = img.naturalHeight;
 
-        if (iw < MAX_DIM && ih < MAX_DIM) {
-            this.bcanvas.width = iw;
-            this.bcanvas.height = ih;
-            this.bctx.drawImage(img, 0, 0);
-            return this.bctx.getImageData(0, 0, this.bcanvas.width, this.bcanvas.height);
+        let targetWidth = iw;
+        let targetHeight = ih;
+
+        if (!this._high_precision) {
+            const pixels = iw * ih;
+            if (pixels > this._max_canvas_pixels) {
+                const scale = Math.sqrt(this._max_canvas_pixels / pixels);
+                targetWidth = Math.max(1, Math.round(iw * scale));
+                targetHeight = Math.max(1, Math.round(ih * scale));
+            }
         }
 
-        const max_dim = iw > ih ? iw : ih;
-        const ow = Math.round((iw / max_dim) * MAX_DIM),
-            oh = Math.round((ih / max_dim) * MAX_DIM);
-        this.bcanvas.width = ow;
-        this.bcanvas.height = oh;
-        this.bctx.drawImage(img, 0, 0, iw, ih, 0, 0, ow, oh);
-        return this.bctx.getImageData(0, 0, ow, oh);
+        this.bcanvas.width = targetWidth;
+        this.bcanvas.height = targetHeight;
+        this.bctx.drawImage(img, 0, 0, iw, ih, 0, 0, targetWidth, targetHeight);
+
+        return {
+            imageData: this.bctx.getImageData(0, 0, targetWidth, targetHeight),
+            meta: {
+                naturalWidth: iw,
+                naturalHeight: ih,
+                processedWidth: targetWidth,
+                processedHeight: targetHeight,
+                scale: targetWidth / iw,
+            }
+        };
     }
 
     draw_slide_image(slide_factor, is_horizontal = false) {
