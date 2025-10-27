@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="manifest" href="./manifest.json" />
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -65,14 +64,12 @@
       href="./deps/material-components-web.min.css"
       as="style"
       type="text/css"
-      integrity="sha384-zYyxh4r8CWy0xvG1ua+/rTeQmFY/YhmqzzaqluuGnN9+fCFSj/jF1AwiW9p+KUW/"
     />
     <link
       rel="preload"
       href="./deps/material-components-web.min.js"
       as="script"
       type="text/javascript"
-      integrity="sha384-8iww5N0HFABAFdwBAcqef8367heaZqV6cGdI2zjVr6ztCVbINoKlnoyYyCvkEtAt"
     />
     <link
       rel="preload"
@@ -81,11 +78,7 @@
     />
 
     <!-- Required styles for Material Web -->
-    <link
-      rel="stylesheet"
-      href="./deps/material-components-web.min.css"
-      integrity="sha384-zYyxh4r8CWy0xvG1ua+/rTeQmFY/YhmqzzaqluuGnN9+fCFSj/jF1AwiW9p+KUW/"
-    />
+    <link rel="stylesheet" href="./deps/material-components-web.min.css" />
     <script>
       const show_onboarding =
         window.localStorage.getItem("show_onboarding") || "true";
@@ -2101,57 +2094,59 @@
         });
       });
 
-      // register service worker
-      window.addEventListener("load", () => {
-        // From https://github.com/jakearchibald/wittr/blob/fecaad3a07c41a43230cf8fef2fc102f658981cf/public/js/main/IndexController.js
+      // register service worker when running via http(s)
+      if (window.location.protocol.startsWith("http")) {
+        window.addEventListener("load", () => {
+          // From https://github.com/jakearchibald/wittr/blob/fecaad3a07c41a43230cf8fef2fc102f658981cf/public/js/main/IndexController.js
 
-        if (!navigator.serviceWorker) return;
-        const sw_ready = (worker) => {
-          // TODO: Currently force refreshing. Show toast.
-          worker.postMessage({ action: "skipWaiting" });
-        };
-        const sw_installing = (worker) => {
-          worker.addEventListener("statechange", () => {
-            if (worker.state === "installed") {
-              sw_ready(worker);
+          if (!navigator.serviceWorker) return;
+          const sw_ready = (worker) => {
+            // TODO: Currently force refreshing. Show toast.
+            worker.postMessage({ action: "skipWaiting" });
+          };
+          const sw_installing = (worker) => {
+            worker.addEventListener("statechange", () => {
+              if (worker.state === "installed") {
+                sw_ready(worker);
+              }
+            });
+          };
+
+          navigator.serviceWorker.register("./sw.js").then((reg) => {
+            if (!navigator.serviceWorker.controller) {
+              // Service worker is not associated
+              return;
             }
+
+            // If there is a pending service worker, show refresh dialog / force refresh
+            if (reg.waiting) {
+              return sw_ready(reg.waiting);
+            }
+
+            if (reg.installing) {
+              // Wait for it to go into waiting state
+              return sw_installing(reg.installing);
+            }
+
+            // if an update happens later, wait for it to go into waiting state.
+            reg.addEventListener("updatefound", () => {
+              sw_installing(reg.installing);
+            });
           });
-        };
 
-        navigator.serviceWorker.register("./sw.js").then((reg) => {
-          if (!navigator.serviceWorker.controller) {
-            // Service worker is not associated
-            return;
-          }
-
-          // If there is a pending service worker, show refresh dialog / force refresh
-          if (reg.waiting) {
-            return sw_ready(reg.waiting);
-          }
-
-          if (reg.installing) {
-            // Wait for it to go into waiting state
-            return sw_installing(reg.installing);
-          }
-
-          // if an update happens later, wait for it to go into waiting state.
-          reg.addEventListener("updatefound", () => {
-            sw_installing(reg.installing);
-          });
+          // Ensure refresh is only called once.
+          // This works around a bug in "force update on reload".
+          var refreshing;
+          navigator.serviceWorker.addEventListener(
+            "controllerchange",
+            function () {
+              if (refreshing) return;
+              window.location.reload();
+              refreshing = true;
+            }
+          );
         });
-
-        // Ensure refresh is only called once.
-        // This works around a bug in "force update on reload".
-        var refreshing;
-        navigator.serviceWorker.addEventListener(
-          "controllerchange",
-          function () {
-            if (refreshing) return;
-            window.location.reload();
-            refreshing = true;
-          }
-        );
-      });
+      }
     </script>
   </body>
 </html>
